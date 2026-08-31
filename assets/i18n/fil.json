@@ -1,0 +1,101 @@
+{
+  "app_name": "ReadyMAMA",
+  "tagline": "Ang Iyong Kasama sa Paghahanda sa Panganganak",
+
+  "nav": {
+    "dashboard": "Dashboard",
+    "assessment": "Pagsusuri",
+    "hospital_bag": "Bag Pang-ospital",
+    "emergency": "Emergency",
+    "profile": "Profile"
+  },
+
+  "categories": {
+    "delivery_plan": "Plano sa Panganganak",
+    "transportation_plan": "Plano sa Sasakyan",
+    "emergency_fund": "Pondo Para sa Emergency",
+    "hospital_bag": "Bag Pang-ospital at Mahahalagang Gamit",
+    "support_person": "Plano sa Kasamang Susuporta",
+    "emergency_plan": "Plano sa Emergency",
+    "danger_sign_knowledge": "Kaalaman sa Mga Babala sa Pagbubuntis"
+  },
+
+  "status": {
+    "ready": "Handa Na",
+    "needs_preparation": "Kailangan pang Ihanda",
+    "not_yet_ready": "Hindi Pa Handa",
+    "needs_improvement": "Kailangan pang Pagbutihin"
+  },
+
+  "dashboard": {
+    "score_title": "Iyong Marka sa Paghahanda sa Panganganak",
+    "score_label": "{score} / {max} — {statusLabel}",
+    "view_breakdown": "Tingnan ang Buong Detalye",
+    "quick_actions": "Mabilisang Aksyon"
+  },
+
+  "assessment": {
+    "start": "Simulan ang Pagsusuri",
+    "continue": "Ituloy ang Pagsusuri",
+    "next": "Susunod",
+    "back": "Bumalik",
+    "finish": "Tapusin ang Pagsusuri",
+    "retake": "Ulitin ang Pagsusuri",
+    "results_title": "Iyong Resulta",
+    "feedback": {
+      "delivery_plan_not_ready": "Hindi mo pa natutukoy ang pasilidad kung saan ka manganganak. Kausapin agad ang iyong healthcare provider.",
+      "transportation_needs_preparation": "May natukoy ka nang paraan papunta sa pasilidad, pero wala ka pang backup na sasakyan.",
+      "emergency_fund_needs_preparation": "Pag-isipan ang paglalaan ng pondo para sa sasakyan at hindi inaasahang gastos sa panganganak.",
+      "emergency_plan_not_ready": "Kailangan mo pang kumpletuhin ang iyong emergency plan, tulad ng pagtukoy ng emergency contacts at backup na sasakyan."
+    }
+  },
+
+  "hospital_bag": {
+    "title": "Listahan ng Bag Pang-ospital",
+    "tab_mother": "Ina",
+    "tab_baby": "Sanggol",
+    "progress_label": "{checked} / {total} na gamit ang nahanda",
+    "delivery_mode_toggle": "Uri ng Panganganak",
+    "mode_normal": "Normal na Panganganak",
+    "mode_cesarean": "Cesarean Section",
+    "add_item": "Magdagdag ng Sariling Gamit",
+    "add_item_hint": "hal. Extra na charger ng telepono"
+  },
+
+  "emergency": {
+    "title": "Mabilisang Emergency Actions",
+    "call_hospital": "Tawagan ang Planong Ospital",
+    "call_transport": "Tawagan ang Sasakyan",
+    "call_support_person": "Tawagan ang Kasamang Susuporta",
+    "call_emergency_contact": "Tawagan ang Emergency Contact",
+    "no_contact_set": "Wala pang naitakdang contact"
+  },
+
+  "reminders": {
+    "title": "Mga Paalala",
+    "week1_title": "Paalala sa Plano sa Panganganak",
+    "week1_body": "Kumusta! Natukoy mo na ba kung saan ka manganganak? Tignan mo kung alam mo na ang iyong pasilidad at paano makarating dito.",
+    "week2_title": "Paalala sa Plano sa Sasakyan",
+    "week2_body": "Birth Prep Check! Mayroon ka na bang primary at backup na sasakyan papunta sa pasilidad?",
+    "week3_title": "Paalala sa Mahahalagang Gamit",
+    "week3_body": "Oras na para tingnan ang iyong mga gamit! Nahanda mo na ba ang mga kakailanganin mo at ng iyong sanggol?",
+    "week4_title": "Paalala sa Kaalaman sa Mga Babala",
+    "week4_body": "Mabilisang paalala! Alam mo ba ang mga babala sa pagbubuntis na nangangailangan ng agarang pag-aalaga?"
+  },
+
+  "profile": {
+    "language": "Wika",
+    "language_en": "Ingles",
+    "language_fil": "Filipino",
+    "export_pdf": "I-export ang PDF Summary",
+    "settings": "Mga Setting"
+  },
+
+  "common": {
+    "save": "I-save",
+    "cancel": "Kanselahin",
+    "done": "Tapos Na",
+    "delete": "Burahin",
+    "edit": "I-edit"
+  }
+}

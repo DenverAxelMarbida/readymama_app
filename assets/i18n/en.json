@@ -1,0 +1,101 @@
+{
+  "app_name": "ReadyMAMA",
+  "tagline": "Your Birth Preparedness Companion",
+
+  "nav": {
+    "dashboard": "Dashboard",
+    "assessment": "Assessment",
+    "hospital_bag": "Hospital Bag",
+    "emergency": "Emergency",
+    "profile": "Profile"
+  },
+
+  "categories": {
+    "delivery_plan": "Delivery Plan",
+    "transportation_plan": "Transportation Plan",
+    "emergency_fund": "Emergency Fund",
+    "hospital_bag": "Hospital Bag & Essential Supplies",
+    "support_person": "Support Person Plan",
+    "emergency_plan": "Emergency Plan",
+    "danger_sign_knowledge": "Pregnancy Danger Signs Knowledge"
+  },
+
+  "status": {
+    "ready": "Ready",
+    "needs_preparation": "Needs Preparation",
+    "not_yet_ready": "Not Yet Ready",
+    "needs_improvement": "Needs Improvement"
+  },
+
+  "dashboard": {
+    "score_title": "Your Birth Preparedness Score",
+    "score_label": "{score} / {max} — {statusLabel}",
+    "view_breakdown": "View Full Breakdown",
+    "quick_actions": "Quick Actions"
+  },
+
+  "assessment": {
+    "start": "Start Assessment",
+    "continue": "Continue Assessment",
+    "next": "Next",
+    "back": "Back",
+    "finish": "Finish Assessment",
+    "retake": "Retake Assessment",
+    "results_title": "Your Results",
+    "feedback": {
+      "delivery_plan_not_ready": "You have not yet identified your delivery facility. Discuss this with your healthcare provider soon.",
+      "transportation_needs_preparation": "You have identified a way to travel to the health facility, but a backup transportation plan has not yet been identified.",
+      "emergency_fund_needs_preparation": "Consider discussing and planning accessible funds for transportation and unexpected maternity-related expenses.",
+      "emergency_plan_not_ready": "You still need to complete important emergency preparations, such as identifying emergency contacts and backup transportation."
+    }
+  },
+
+  "hospital_bag": {
+    "title": "Hospital Bag Checklist",
+    "tab_mother": "Mother",
+    "tab_baby": "Baby",
+    "progress_label": "{checked} / {total} items prepared",
+    "delivery_mode_toggle": "Delivery Mode",
+    "mode_normal": "Normal Vaginal Delivery",
+    "mode_cesarean": "Cesarean Section",
+    "add_item": "Add Custom Item",
+    "add_item_hint": "e.g. Extra phone charger"
+  },
+
+  "emergency": {
+    "title": "Quick Emergency Actions",
+    "call_hospital": "Call Planned Hospital",
+    "call_transport": "Call Transport",
+    "call_support_person": "Call Support Person",
+    "call_emergency_contact": "Call Emergency Contact",
+    "no_contact_set": "No contact set yet"
+  },
+
+  "reminders": {
+    "title": "Reminders",
+    "week1_title": "Delivery Plan Reminder",
+    "week1_body": "Hi! Have you already identified where you plan to give birth? Take a moment to check if you know your planned delivery facility and how to reach it.",
+    "week2_title": "Transportation Plan Reminder",
+    "week2_body": "Birth Prep Check! Do you already have primary and backup transportation plans for getting to your delivery facility?",
+    "week3_title": "Essential Supplies Reminder",
+    "week3_body": "It's time to check your delivery essentials! Have you prepared the items you and your baby may need?",
+    "week4_title": "Danger Sign Knowledge Reminder",
+    "week4_body": "Quick reminder! Do you know the pregnancy warning signs that require urgent medical attention?"
+  },
+
+  "profile": {
+    "language": "Language",
+    "language_en": "English",
+    "language_fil": "Filipino",
+    "export_pdf": "Export PDF Summary",
+    "settings": "Settings"
+  },
+
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "done": "Done",
+    "delete": "Delete",
+    "edit": "Edit"
+  }
+}
