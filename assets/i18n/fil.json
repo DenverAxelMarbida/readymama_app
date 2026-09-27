@@ -97,5 +97,78 @@
     "done": "Tapos Na",
     "delete": "Burahin",
     "edit": "I-edit"
+  },
+
+  "sample_questions": {
+    "delivery_plan": {
+      "q1": "Saan mo planong manganak?",
+      "q1_a": "Sa ospital o birthing facility kung saan ako nagpapatingin para sa prenatal checkup",
+      "q1_b": "Sa bahay dahil mas komportable roon",
+      "q1_c": "Magdedesisyon ako kapag nagsimula na ang labor",
+      "q1_d": "Naghahanap pa rin ako ng lugar",
+      "q2": "Paano ka pupunta sa health facility kapag nagsimula na ang labor?",
+      "q2_a": "Hihintayin ko ang asawa o pamilya ko na makahanap ng masasakyan",
+      "q2_b": "May nakaplano na akong masasakyan, tulad ng tricycle, kotse, o iba pang transportasyon",
+      "q2_c": "Maghahanap lang ako ng masasakyan kapag nagsimula na ang labor",
+      "q2_d": "Hindi ko pa ito napag-iisipan"
+    },
+    "hospital_bag": {
+      "q1": "Naihanda mo na ba ang mga gamit na kakailanganin mo sa ospital o lugar kung saan ka manganganak?",
+      "q1_a": "Oo, halos lahat o lahat ng kailangan ay handa na",
+      "q1_b": "May ilang gamit na handa na pero may kulang pa",
+      "q1_c": "Kaunti pa lamang ang naihahanda ko",
+      "q1_d": "Wala pa akong naihahandang gamit",
+      "q2": "Naihanda mo na ba ang iyong mga damit at personal na gamit?",
+      "q2_a": "Oo, handa na ang mga damit at gamit pangkalinisan",
+      "q2_b": "May ilang gamit na handa na pero may kulang pa",
+      "q2_c": "Alam ko ang kailangan ko pero hindi ko pa ito naihahanda",
+      "q2_d": "Hindi ko alam kung ano ang mga kailangan ko"
+    },
+    "emergency_plan": {
+      "q1": "Ano ang dapat mong gawin kung makaranas ka ng matinding pagdurugo habang buntis?",
+      "q1_a": "Magpahinga at hintaying tumigil ito.",
+      "q1_b": "Humingi agad ng tulong medikal.",
+      "q1_c": "Uminom ng mas maraming tubig.",
+      "q1_d": "Huwag itong pansinin.",
+      "q5": "Ano ang dapat mong ihanda bago magkaroon ng emergency?",
+      "q5_a": "Emergency bag at mahahalagang health records.",
+      "q5_b": "Mga bagong damit lamang.",
+      "q5_c": "Pagkain para sa isang linggo lamang.",
+      "q5_d": "Mga laruan at panglibang."
+    },
+    "self_preparedness": {
+      "q1": "Nakakaramdam ako na handa ako sa mga pagbabago na maaaring mangyari sa aking buhay dahil sa pagbubuntis at panganganak.",
+      "q1_sa": "Strongly Agree",
+      "q1_a": "Agree",
+      "q1_d": "Disagree",
+      "q1_sd": "Strongly Disagree",
+      "q2": "Kaya kong kontrolin ang aking emosyon kapag nakakaramdam ako ng takot, pag-aalala, o stress habang buntis.",
+      "q2_sa": "Strongly Agree",
+      "q2_a": "Agree",
+      "q2_d": "Disagree",
+      "q2_sd": "Strongly Disagree"
+    },
+    "support_person": {
+      "q3": "Handa at nais ba ng iyong napiling taong susuporta na samahan ka habang ikaw ay nanganganak?",
+      "q3_yes": "Oo",
+      "q3_not_sure": "Hindi sigurado",
+      "q3_no": "Hindi",
+      "q7": "Alam ba ng iyong taong susuporta ang mga senyales o sintomas na nangangailangan ng agarang pagpapatingin o pagpunta sa health facility?",
+      "q7_yes": "Oo",
+      "q7_not_sure": "Hindi sigurado",
+      "q7_no": "Hindi"
+    },
+    "danger_signs": {
+      "q1": "Nakakaranas ka ba ng pagdurugo o spotting sa puwerta?",
+      "q1_a": "Oo, dumudugo ang aking puwerta o marami akong spotting",
+      "q1_b": "Kaunti lang ang spotting ko minsan, pero mino-monitor ko ito",
+      "q1_c": "Wala ngayon, pero nakaranas ako ng pagdurugo noong mas maaga sa pagbubuntis ko",
+      "q1_d": "Wala akong nararanasang pagdurugo o spotting",
+      "q7": "Napansin mo ba na biglang namaga ang iyong mukha o mga kamay?",
+      "q7_a": "Oo, bigla at kapansin-pansing namaga ang mukha o mga kamay ko",
+      "q7_b": "Medyo namamaga ang paa o bukung-bukong ko sa pagtatapos ng araw",
+      "q7_c": "Medyo masikip ang singsing o sapatos ko, pero normal naman ang mukha ko",
+      "q7_d": "Wala akong napansing biglaang pamamaga sa mukha o mga kamay ko"
+    }
   }
 }

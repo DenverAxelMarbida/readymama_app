@@ -53,3 +53,6 @@ app.*.map.json
 /android/.gradle/
 *.jks
 *.keystore
+
+# opencode local config (skills, plugins, commands, agents, hooks)
+/.opencode/

@@ -236,7 +236,7 @@ class AssessmentScoreEntry extends DataClass
   /// Raw points earned in this category.
   final int score;
 
-  /// Max points possible for this category (contributes to the 80-pt total).
+  /// Max points possible for this category.
   final int maxScore;
   final PreparednessStatus status;
 
@@ -1100,6 +1100,2148 @@ class ChecklistItemsCompanion extends UpdateCompanion<ChecklistItemEntry> {
   }
 }
 
+class $DangerSignsScreeningsTable extends DangerSignsScreenings
+    with TableInfo<$DangerSignsScreeningsTable, DangerSignsScreeningEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DangerSignsScreeningsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _isDangerDetectedMeta = const VerificationMeta(
+    'isDangerDetected',
+  );
+  @override
+  late final GeneratedColumn<bool> isDangerDetected = GeneratedColumn<bool>(
+    'is_danger_detected',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_danger_detected" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _triggeringQuestionIdsMeta =
+      const VerificationMeta('triggeringQuestionIds');
+  @override
+  late final GeneratedColumn<String> triggeringQuestionIds =
+      GeneratedColumn<String>(
+        'triggering_question_ids',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _completedAtMeta = const VerificationMeta(
+    'completedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> completedAt = GeneratedColumn<DateTime>(
+    'completed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    isDangerDetected,
+    triggeringQuestionIds,
+    completedAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'danger_signs_screenings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DangerSignsScreeningEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('is_danger_detected')) {
+      context.handle(
+        _isDangerDetectedMeta,
+        isDangerDetected.isAcceptableOrUnknown(
+          data['is_danger_detected']!,
+          _isDangerDetectedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('triggering_question_ids')) {
+      context.handle(
+        _triggeringQuestionIdsMeta,
+        triggeringQuestionIds.isAcceptableOrUnknown(
+          data['triggering_question_ids']!,
+          _triggeringQuestionIdsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('completed_at')) {
+      context.handle(
+        _completedAtMeta,
+        completedAt.isAcceptableOrUnknown(
+          data['completed_at']!,
+          _completedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DangerSignsScreeningEntry map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DangerSignsScreeningEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      isDangerDetected: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_danger_detected'],
+      )!,
+      triggeringQuestionIds: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}triggering_question_ids'],
+      ),
+      completedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}completed_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $DangerSignsScreeningsTable createAlias(String alias) {
+    return $DangerSignsScreeningsTable(attachedDatabase, alias);
+  }
+}
+
+class DangerSignsScreeningEntry extends DataClass
+    implements Insertable<DangerSignsScreeningEntry> {
+  final int id;
+  final bool isDangerDetected;
+
+  /// Question ids of the danger-sign questions whose danger option (rank 1)
+  /// was selected. Stored as a single comma-separated text column: a proper
+  /// join table would be overkill for one boolean screener result, and this
+  /// keeps the row trivially inspectable in raw SQL.
+  final String? triggeringQuestionIds;
+  final DateTime completedAt;
+  final DateTime updatedAt;
+  const DangerSignsScreeningEntry({
+    required this.id,
+    required this.isDangerDetected,
+    this.triggeringQuestionIds,
+    required this.completedAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['is_danger_detected'] = Variable<bool>(isDangerDetected);
+    if (!nullToAbsent || triggeringQuestionIds != null) {
+      map['triggering_question_ids'] = Variable<String>(triggeringQuestionIds);
+    }
+    map['completed_at'] = Variable<DateTime>(completedAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  DangerSignsScreeningsCompanion toCompanion(bool nullToAbsent) {
+    return DangerSignsScreeningsCompanion(
+      id: Value(id),
+      isDangerDetected: Value(isDangerDetected),
+      triggeringQuestionIds: triggeringQuestionIds == null && nullToAbsent
+          ? const Value.absent()
+          : Value(triggeringQuestionIds),
+      completedAt: Value(completedAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory DangerSignsScreeningEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DangerSignsScreeningEntry(
+      id: serializer.fromJson<int>(json['id']),
+      isDangerDetected: serializer.fromJson<bool>(json['isDangerDetected']),
+      triggeringQuestionIds: serializer.fromJson<String?>(
+        json['triggeringQuestionIds'],
+      ),
+      completedAt: serializer.fromJson<DateTime>(json['completedAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'isDangerDetected': serializer.toJson<bool>(isDangerDetected),
+      'triggeringQuestionIds': serializer.toJson<String?>(
+        triggeringQuestionIds,
+      ),
+      'completedAt': serializer.toJson<DateTime>(completedAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  DangerSignsScreeningEntry copyWith({
+    int? id,
+    bool? isDangerDetected,
+    Value<String?> triggeringQuestionIds = const Value.absent(),
+    DateTime? completedAt,
+    DateTime? updatedAt,
+  }) => DangerSignsScreeningEntry(
+    id: id ?? this.id,
+    isDangerDetected: isDangerDetected ?? this.isDangerDetected,
+    triggeringQuestionIds: triggeringQuestionIds.present
+        ? triggeringQuestionIds.value
+        : this.triggeringQuestionIds,
+    completedAt: completedAt ?? this.completedAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  DangerSignsScreeningEntry copyWithCompanion(
+    DangerSignsScreeningsCompanion data,
+  ) {
+    return DangerSignsScreeningEntry(
+      id: data.id.present ? data.id.value : this.id,
+      isDangerDetected: data.isDangerDetected.present
+          ? data.isDangerDetected.value
+          : this.isDangerDetected,
+      triggeringQuestionIds: data.triggeringQuestionIds.present
+          ? data.triggeringQuestionIds.value
+          : this.triggeringQuestionIds,
+      completedAt: data.completedAt.present
+          ? data.completedAt.value
+          : this.completedAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DangerSignsScreeningEntry(')
+          ..write('id: $id, ')
+          ..write('isDangerDetected: $isDangerDetected, ')
+          ..write('triggeringQuestionIds: $triggeringQuestionIds, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    isDangerDetected,
+    triggeringQuestionIds,
+    completedAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DangerSignsScreeningEntry &&
+          other.id == this.id &&
+          other.isDangerDetected == this.isDangerDetected &&
+          other.triggeringQuestionIds == this.triggeringQuestionIds &&
+          other.completedAt == this.completedAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class DangerSignsScreeningsCompanion
+    extends UpdateCompanion<DangerSignsScreeningEntry> {
+  final Value<int> id;
+  final Value<bool> isDangerDetected;
+  final Value<String?> triggeringQuestionIds;
+  final Value<DateTime> completedAt;
+  final Value<DateTime> updatedAt;
+  const DangerSignsScreeningsCompanion({
+    this.id = const Value.absent(),
+    this.isDangerDetected = const Value.absent(),
+    this.triggeringQuestionIds = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  DangerSignsScreeningsCompanion.insert({
+    this.id = const Value.absent(),
+    this.isDangerDetected = const Value.absent(),
+    this.triggeringQuestionIds = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  static Insertable<DangerSignsScreeningEntry> custom({
+    Expression<int>? id,
+    Expression<bool>? isDangerDetected,
+    Expression<String>? triggeringQuestionIds,
+    Expression<DateTime>? completedAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (isDangerDetected != null) 'is_danger_detected': isDangerDetected,
+      if (triggeringQuestionIds != null)
+        'triggering_question_ids': triggeringQuestionIds,
+      if (completedAt != null) 'completed_at': completedAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  DangerSignsScreeningsCompanion copyWith({
+    Value<int>? id,
+    Value<bool>? isDangerDetected,
+    Value<String?>? triggeringQuestionIds,
+    Value<DateTime>? completedAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return DangerSignsScreeningsCompanion(
+      id: id ?? this.id,
+      isDangerDetected: isDangerDetected ?? this.isDangerDetected,
+      triggeringQuestionIds:
+          triggeringQuestionIds ?? this.triggeringQuestionIds,
+      completedAt: completedAt ?? this.completedAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (isDangerDetected.present) {
+      map['is_danger_detected'] = Variable<bool>(isDangerDetected.value);
+    }
+    if (triggeringQuestionIds.present) {
+      map['triggering_question_ids'] = Variable<String>(
+        triggeringQuestionIds.value,
+      );
+    }
+    if (completedAt.present) {
+      map['completed_at'] = Variable<DateTime>(completedAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DangerSignsScreeningsCompanion(')
+          ..write('id: $id, ')
+          ..write('isDangerDetected: $isDangerDetected, ')
+          ..write('triggeringQuestionIds: $triggeringQuestionIds, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DeliveryPlanRecordsTable extends DeliveryPlanRecords
+    with TableInfo<$DeliveryPlanRecordsTable, DeliveryPlanRecordEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DeliveryPlanRecordsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _preferredFacilityMeta = const VerificationMeta(
+    'preferredFacility',
+  );
+  @override
+  late final GeneratedColumn<String> preferredFacility =
+      GeneratedColumn<String>(
+        'preferred_facility',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _primaryTransportMeta = const VerificationMeta(
+    'primaryTransport',
+  );
+  @override
+  late final GeneratedColumn<String> primaryTransport = GeneratedColumn<String>(
+    'primary_transport',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _accompaniedByMeta = const VerificationMeta(
+    'accompaniedBy',
+  );
+  @override
+  late final GeneratedColumn<String> accompaniedBy = GeneratedColumn<String>(
+    'accompanied_by',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _discussedWithSupportPersonMeta =
+      const VerificationMeta('discussedWithSupportPerson');
+  @override
+  late final GeneratedColumn<bool> discussedWithSupportPerson =
+      GeneratedColumn<bool>(
+        'discussed_with_support_person',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("discussed_with_support_person" IN (0, 1))',
+        ),
+        defaultValue: const Constant(false),
+      );
+  static const VerificationMeta _backupPlanNotesMeta = const VerificationMeta(
+    'backupPlanNotes',
+  );
+  @override
+  late final GeneratedColumn<String> backupPlanNotes = GeneratedColumn<String>(
+    'backup_plan_notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    preferredFacility,
+    primaryTransport,
+    accompaniedBy,
+    discussedWithSupportPerson,
+    backupPlanNotes,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'delivery_plan_records';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DeliveryPlanRecordEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('preferred_facility')) {
+      context.handle(
+        _preferredFacilityMeta,
+        preferredFacility.isAcceptableOrUnknown(
+          data['preferred_facility']!,
+          _preferredFacilityMeta,
+        ),
+      );
+    }
+    if (data.containsKey('primary_transport')) {
+      context.handle(
+        _primaryTransportMeta,
+        primaryTransport.isAcceptableOrUnknown(
+          data['primary_transport']!,
+          _primaryTransportMeta,
+        ),
+      );
+    }
+    if (data.containsKey('accompanied_by')) {
+      context.handle(
+        _accompaniedByMeta,
+        accompaniedBy.isAcceptableOrUnknown(
+          data['accompanied_by']!,
+          _accompaniedByMeta,
+        ),
+      );
+    }
+    if (data.containsKey('discussed_with_support_person')) {
+      context.handle(
+        _discussedWithSupportPersonMeta,
+        discussedWithSupportPerson.isAcceptableOrUnknown(
+          data['discussed_with_support_person']!,
+          _discussedWithSupportPersonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('backup_plan_notes')) {
+      context.handle(
+        _backupPlanNotesMeta,
+        backupPlanNotes.isAcceptableOrUnknown(
+          data['backup_plan_notes']!,
+          _backupPlanNotesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DeliveryPlanRecordEntry map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DeliveryPlanRecordEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      preferredFacility: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}preferred_facility'],
+      ),
+      primaryTransport: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}primary_transport'],
+      ),
+      accompaniedBy: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}accompanied_by'],
+      ),
+      discussedWithSupportPerson: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}discussed_with_support_person'],
+      )!,
+      backupPlanNotes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}backup_plan_notes'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $DeliveryPlanRecordsTable createAlias(String alias) {
+    return $DeliveryPlanRecordsTable(attachedDatabase, alias);
+  }
+}
+
+class DeliveryPlanRecordEntry extends DataClass
+    implements Insertable<DeliveryPlanRecordEntry> {
+  final int id;
+  final String? preferredFacility;
+  final String? primaryTransport;
+  final String? accompaniedBy;
+  final bool discussedWithSupportPerson;
+  final String? backupPlanNotes;
+  final DateTime updatedAt;
+  const DeliveryPlanRecordEntry({
+    required this.id,
+    this.preferredFacility,
+    this.primaryTransport,
+    this.accompaniedBy,
+    required this.discussedWithSupportPerson,
+    this.backupPlanNotes,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || preferredFacility != null) {
+      map['preferred_facility'] = Variable<String>(preferredFacility);
+    }
+    if (!nullToAbsent || primaryTransport != null) {
+      map['primary_transport'] = Variable<String>(primaryTransport);
+    }
+    if (!nullToAbsent || accompaniedBy != null) {
+      map['accompanied_by'] = Variable<String>(accompaniedBy);
+    }
+    map['discussed_with_support_person'] = Variable<bool>(
+      discussedWithSupportPerson,
+    );
+    if (!nullToAbsent || backupPlanNotes != null) {
+      map['backup_plan_notes'] = Variable<String>(backupPlanNotes);
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  DeliveryPlanRecordsCompanion toCompanion(bool nullToAbsent) {
+    return DeliveryPlanRecordsCompanion(
+      id: Value(id),
+      preferredFacility: preferredFacility == null && nullToAbsent
+          ? const Value.absent()
+          : Value(preferredFacility),
+      primaryTransport: primaryTransport == null && nullToAbsent
+          ? const Value.absent()
+          : Value(primaryTransport),
+      accompaniedBy: accompaniedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accompaniedBy),
+      discussedWithSupportPerson: Value(discussedWithSupportPerson),
+      backupPlanNotes: backupPlanNotes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(backupPlanNotes),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory DeliveryPlanRecordEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DeliveryPlanRecordEntry(
+      id: serializer.fromJson<int>(json['id']),
+      preferredFacility: serializer.fromJson<String?>(
+        json['preferredFacility'],
+      ),
+      primaryTransport: serializer.fromJson<String?>(json['primaryTransport']),
+      accompaniedBy: serializer.fromJson<String?>(json['accompaniedBy']),
+      discussedWithSupportPerson: serializer.fromJson<bool>(
+        json['discussedWithSupportPerson'],
+      ),
+      backupPlanNotes: serializer.fromJson<String?>(json['backupPlanNotes']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'preferredFacility': serializer.toJson<String?>(preferredFacility),
+      'primaryTransport': serializer.toJson<String?>(primaryTransport),
+      'accompaniedBy': serializer.toJson<String?>(accompaniedBy),
+      'discussedWithSupportPerson': serializer.toJson<bool>(
+        discussedWithSupportPerson,
+      ),
+      'backupPlanNotes': serializer.toJson<String?>(backupPlanNotes),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  DeliveryPlanRecordEntry copyWith({
+    int? id,
+    Value<String?> preferredFacility = const Value.absent(),
+    Value<String?> primaryTransport = const Value.absent(),
+    Value<String?> accompaniedBy = const Value.absent(),
+    bool? discussedWithSupportPerson,
+    Value<String?> backupPlanNotes = const Value.absent(),
+    DateTime? updatedAt,
+  }) => DeliveryPlanRecordEntry(
+    id: id ?? this.id,
+    preferredFacility: preferredFacility.present
+        ? preferredFacility.value
+        : this.preferredFacility,
+    primaryTransport: primaryTransport.present
+        ? primaryTransport.value
+        : this.primaryTransport,
+    accompaniedBy: accompaniedBy.present
+        ? accompaniedBy.value
+        : this.accompaniedBy,
+    discussedWithSupportPerson:
+        discussedWithSupportPerson ?? this.discussedWithSupportPerson,
+    backupPlanNotes: backupPlanNotes.present
+        ? backupPlanNotes.value
+        : this.backupPlanNotes,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  DeliveryPlanRecordEntry copyWithCompanion(DeliveryPlanRecordsCompanion data) {
+    return DeliveryPlanRecordEntry(
+      id: data.id.present ? data.id.value : this.id,
+      preferredFacility: data.preferredFacility.present
+          ? data.preferredFacility.value
+          : this.preferredFacility,
+      primaryTransport: data.primaryTransport.present
+          ? data.primaryTransport.value
+          : this.primaryTransport,
+      accompaniedBy: data.accompaniedBy.present
+          ? data.accompaniedBy.value
+          : this.accompaniedBy,
+      discussedWithSupportPerson: data.discussedWithSupportPerson.present
+          ? data.discussedWithSupportPerson.value
+          : this.discussedWithSupportPerson,
+      backupPlanNotes: data.backupPlanNotes.present
+          ? data.backupPlanNotes.value
+          : this.backupPlanNotes,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DeliveryPlanRecordEntry(')
+          ..write('id: $id, ')
+          ..write('preferredFacility: $preferredFacility, ')
+          ..write('primaryTransport: $primaryTransport, ')
+          ..write('accompaniedBy: $accompaniedBy, ')
+          ..write('discussedWithSupportPerson: $discussedWithSupportPerson, ')
+          ..write('backupPlanNotes: $backupPlanNotes, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    preferredFacility,
+    primaryTransport,
+    accompaniedBy,
+    discussedWithSupportPerson,
+    backupPlanNotes,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DeliveryPlanRecordEntry &&
+          other.id == this.id &&
+          other.preferredFacility == this.preferredFacility &&
+          other.primaryTransport == this.primaryTransport &&
+          other.accompaniedBy == this.accompaniedBy &&
+          other.discussedWithSupportPerson == this.discussedWithSupportPerson &&
+          other.backupPlanNotes == this.backupPlanNotes &&
+          other.updatedAt == this.updatedAt);
+}
+
+class DeliveryPlanRecordsCompanion
+    extends UpdateCompanion<DeliveryPlanRecordEntry> {
+  final Value<int> id;
+  final Value<String?> preferredFacility;
+  final Value<String?> primaryTransport;
+  final Value<String?> accompaniedBy;
+  final Value<bool> discussedWithSupportPerson;
+  final Value<String?> backupPlanNotes;
+  final Value<DateTime> updatedAt;
+  const DeliveryPlanRecordsCompanion({
+    this.id = const Value.absent(),
+    this.preferredFacility = const Value.absent(),
+    this.primaryTransport = const Value.absent(),
+    this.accompaniedBy = const Value.absent(),
+    this.discussedWithSupportPerson = const Value.absent(),
+    this.backupPlanNotes = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  DeliveryPlanRecordsCompanion.insert({
+    this.id = const Value.absent(),
+    this.preferredFacility = const Value.absent(),
+    this.primaryTransport = const Value.absent(),
+    this.accompaniedBy = const Value.absent(),
+    this.discussedWithSupportPerson = const Value.absent(),
+    this.backupPlanNotes = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  static Insertable<DeliveryPlanRecordEntry> custom({
+    Expression<int>? id,
+    Expression<String>? preferredFacility,
+    Expression<String>? primaryTransport,
+    Expression<String>? accompaniedBy,
+    Expression<bool>? discussedWithSupportPerson,
+    Expression<String>? backupPlanNotes,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (preferredFacility != null) 'preferred_facility': preferredFacility,
+      if (primaryTransport != null) 'primary_transport': primaryTransport,
+      if (accompaniedBy != null) 'accompanied_by': accompaniedBy,
+      if (discussedWithSupportPerson != null)
+        'discussed_with_support_person': discussedWithSupportPerson,
+      if (backupPlanNotes != null) 'backup_plan_notes': backupPlanNotes,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  DeliveryPlanRecordsCompanion copyWith({
+    Value<int>? id,
+    Value<String?>? preferredFacility,
+    Value<String?>? primaryTransport,
+    Value<String?>? accompaniedBy,
+    Value<bool>? discussedWithSupportPerson,
+    Value<String?>? backupPlanNotes,
+    Value<DateTime>? updatedAt,
+  }) {
+    return DeliveryPlanRecordsCompanion(
+      id: id ?? this.id,
+      preferredFacility: preferredFacility ?? this.preferredFacility,
+      primaryTransport: primaryTransport ?? this.primaryTransport,
+      accompaniedBy: accompaniedBy ?? this.accompaniedBy,
+      discussedWithSupportPerson:
+          discussedWithSupportPerson ?? this.discussedWithSupportPerson,
+      backupPlanNotes: backupPlanNotes ?? this.backupPlanNotes,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (preferredFacility.present) {
+      map['preferred_facility'] = Variable<String>(preferredFacility.value);
+    }
+    if (primaryTransport.present) {
+      map['primary_transport'] = Variable<String>(primaryTransport.value);
+    }
+    if (accompaniedBy.present) {
+      map['accompanied_by'] = Variable<String>(accompaniedBy.value);
+    }
+    if (discussedWithSupportPerson.present) {
+      map['discussed_with_support_person'] = Variable<bool>(
+        discussedWithSupportPerson.value,
+      );
+    }
+    if (backupPlanNotes.present) {
+      map['backup_plan_notes'] = Variable<String>(backupPlanNotes.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DeliveryPlanRecordsCompanion(')
+          ..write('id: $id, ')
+          ..write('preferredFacility: $preferredFacility, ')
+          ..write('primaryTransport: $primaryTransport, ')
+          ..write('accompaniedBy: $accompaniedBy, ')
+          ..write('discussedWithSupportPerson: $discussedWithSupportPerson, ')
+          ..write('backupPlanNotes: $backupPlanNotes, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SupportPersonRecordsTable extends SupportPersonRecords
+    with TableInfo<$SupportPersonRecordsTable, SupportPersonRecordEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SupportPersonRecordsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _fullNameMeta = const VerificationMeta(
+    'fullName',
+  );
+  @override
+  late final GeneratedColumn<String> fullName = GeneratedColumn<String>(
+    'full_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _relationshipMeta = const VerificationMeta(
+    'relationship',
+  );
+  @override
+  late final GeneratedColumn<String> relationship = GeneratedColumn<String>(
+    'relationship',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contactNumberMeta = const VerificationMeta(
+    'contactNumber',
+  );
+  @override
+  late final GeneratedColumn<String> contactNumber = GeneratedColumn<String>(
+    'contact_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _addressMeta = const VerificationMeta(
+    'address',
+  );
+  @override
+  late final GeneratedColumn<String> address = GeneratedColumn<String>(
+    'address',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _alternateContactNameMeta =
+      const VerificationMeta('alternateContactName');
+  @override
+  late final GeneratedColumn<String> alternateContactName =
+      GeneratedColumn<String>(
+        'alternate_contact_name',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _alternateContactNumberMeta =
+      const VerificationMeta('alternateContactNumber');
+  @override
+  late final GeneratedColumn<String> alternateContactNumber =
+      GeneratedColumn<String>(
+        'alternate_contact_number',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    fullName,
+    relationship,
+    contactNumber,
+    address,
+    alternateContactName,
+    alternateContactNumber,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'support_person_records';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SupportPersonRecordEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('full_name')) {
+      context.handle(
+        _fullNameMeta,
+        fullName.isAcceptableOrUnknown(data['full_name']!, _fullNameMeta),
+      );
+    }
+    if (data.containsKey('relationship')) {
+      context.handle(
+        _relationshipMeta,
+        relationship.isAcceptableOrUnknown(
+          data['relationship']!,
+          _relationshipMeta,
+        ),
+      );
+    }
+    if (data.containsKey('contact_number')) {
+      context.handle(
+        _contactNumberMeta,
+        contactNumber.isAcceptableOrUnknown(
+          data['contact_number']!,
+          _contactNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('address')) {
+      context.handle(
+        _addressMeta,
+        address.isAcceptableOrUnknown(data['address']!, _addressMeta),
+      );
+    }
+    if (data.containsKey('alternate_contact_name')) {
+      context.handle(
+        _alternateContactNameMeta,
+        alternateContactName.isAcceptableOrUnknown(
+          data['alternate_contact_name']!,
+          _alternateContactNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('alternate_contact_number')) {
+      context.handle(
+        _alternateContactNumberMeta,
+        alternateContactNumber.isAcceptableOrUnknown(
+          data['alternate_contact_number']!,
+          _alternateContactNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SupportPersonRecordEntry map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SupportPersonRecordEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      fullName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}full_name'],
+      ),
+      relationship: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}relationship'],
+      ),
+      contactNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}contact_number'],
+      ),
+      address: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}address'],
+      ),
+      alternateContactName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}alternate_contact_name'],
+      ),
+      alternateContactNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}alternate_contact_number'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SupportPersonRecordsTable createAlias(String alias) {
+    return $SupportPersonRecordsTable(attachedDatabase, alias);
+  }
+}
+
+class SupportPersonRecordEntry extends DataClass
+    implements Insertable<SupportPersonRecordEntry> {
+  final int id;
+  final String? fullName;
+  final String? relationship;
+  final String? contactNumber;
+  final String? address;
+  final String? alternateContactName;
+  final String? alternateContactNumber;
+  final DateTime updatedAt;
+  const SupportPersonRecordEntry({
+    required this.id,
+    this.fullName,
+    this.relationship,
+    this.contactNumber,
+    this.address,
+    this.alternateContactName,
+    this.alternateContactNumber,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || fullName != null) {
+      map['full_name'] = Variable<String>(fullName);
+    }
+    if (!nullToAbsent || relationship != null) {
+      map['relationship'] = Variable<String>(relationship);
+    }
+    if (!nullToAbsent || contactNumber != null) {
+      map['contact_number'] = Variable<String>(contactNumber);
+    }
+    if (!nullToAbsent || address != null) {
+      map['address'] = Variable<String>(address);
+    }
+    if (!nullToAbsent || alternateContactName != null) {
+      map['alternate_contact_name'] = Variable<String>(alternateContactName);
+    }
+    if (!nullToAbsent || alternateContactNumber != null) {
+      map['alternate_contact_number'] = Variable<String>(
+        alternateContactNumber,
+      );
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  SupportPersonRecordsCompanion toCompanion(bool nullToAbsent) {
+    return SupportPersonRecordsCompanion(
+      id: Value(id),
+      fullName: fullName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fullName),
+      relationship: relationship == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relationship),
+      contactNumber: contactNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contactNumber),
+      address: address == null && nullToAbsent
+          ? const Value.absent()
+          : Value(address),
+      alternateContactName: alternateContactName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(alternateContactName),
+      alternateContactNumber: alternateContactNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(alternateContactNumber),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory SupportPersonRecordEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SupportPersonRecordEntry(
+      id: serializer.fromJson<int>(json['id']),
+      fullName: serializer.fromJson<String?>(json['fullName']),
+      relationship: serializer.fromJson<String?>(json['relationship']),
+      contactNumber: serializer.fromJson<String?>(json['contactNumber']),
+      address: serializer.fromJson<String?>(json['address']),
+      alternateContactName: serializer.fromJson<String?>(
+        json['alternateContactName'],
+      ),
+      alternateContactNumber: serializer.fromJson<String?>(
+        json['alternateContactNumber'],
+      ),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'fullName': serializer.toJson<String?>(fullName),
+      'relationship': serializer.toJson<String?>(relationship),
+      'contactNumber': serializer.toJson<String?>(contactNumber),
+      'address': serializer.toJson<String?>(address),
+      'alternateContactName': serializer.toJson<String?>(alternateContactName),
+      'alternateContactNumber': serializer.toJson<String?>(
+        alternateContactNumber,
+      ),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  SupportPersonRecordEntry copyWith({
+    int? id,
+    Value<String?> fullName = const Value.absent(),
+    Value<String?> relationship = const Value.absent(),
+    Value<String?> contactNumber = const Value.absent(),
+    Value<String?> address = const Value.absent(),
+    Value<String?> alternateContactName = const Value.absent(),
+    Value<String?> alternateContactNumber = const Value.absent(),
+    DateTime? updatedAt,
+  }) => SupportPersonRecordEntry(
+    id: id ?? this.id,
+    fullName: fullName.present ? fullName.value : this.fullName,
+    relationship: relationship.present ? relationship.value : this.relationship,
+    contactNumber: contactNumber.present
+        ? contactNumber.value
+        : this.contactNumber,
+    address: address.present ? address.value : this.address,
+    alternateContactName: alternateContactName.present
+        ? alternateContactName.value
+        : this.alternateContactName,
+    alternateContactNumber: alternateContactNumber.present
+        ? alternateContactNumber.value
+        : this.alternateContactNumber,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  SupportPersonRecordEntry copyWithCompanion(
+    SupportPersonRecordsCompanion data,
+  ) {
+    return SupportPersonRecordEntry(
+      id: data.id.present ? data.id.value : this.id,
+      fullName: data.fullName.present ? data.fullName.value : this.fullName,
+      relationship: data.relationship.present
+          ? data.relationship.value
+          : this.relationship,
+      contactNumber: data.contactNumber.present
+          ? data.contactNumber.value
+          : this.contactNumber,
+      address: data.address.present ? data.address.value : this.address,
+      alternateContactName: data.alternateContactName.present
+          ? data.alternateContactName.value
+          : this.alternateContactName,
+      alternateContactNumber: data.alternateContactNumber.present
+          ? data.alternateContactNumber.value
+          : this.alternateContactNumber,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SupportPersonRecordEntry(')
+          ..write('id: $id, ')
+          ..write('fullName: $fullName, ')
+          ..write('relationship: $relationship, ')
+          ..write('contactNumber: $contactNumber, ')
+          ..write('address: $address, ')
+          ..write('alternateContactName: $alternateContactName, ')
+          ..write('alternateContactNumber: $alternateContactNumber, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    fullName,
+    relationship,
+    contactNumber,
+    address,
+    alternateContactName,
+    alternateContactNumber,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SupportPersonRecordEntry &&
+          other.id == this.id &&
+          other.fullName == this.fullName &&
+          other.relationship == this.relationship &&
+          other.contactNumber == this.contactNumber &&
+          other.address == this.address &&
+          other.alternateContactName == this.alternateContactName &&
+          other.alternateContactNumber == this.alternateContactNumber &&
+          other.updatedAt == this.updatedAt);
+}
+
+class SupportPersonRecordsCompanion
+    extends UpdateCompanion<SupportPersonRecordEntry> {
+  final Value<int> id;
+  final Value<String?> fullName;
+  final Value<String?> relationship;
+  final Value<String?> contactNumber;
+  final Value<String?> address;
+  final Value<String?> alternateContactName;
+  final Value<String?> alternateContactNumber;
+  final Value<DateTime> updatedAt;
+  const SupportPersonRecordsCompanion({
+    this.id = const Value.absent(),
+    this.fullName = const Value.absent(),
+    this.relationship = const Value.absent(),
+    this.contactNumber = const Value.absent(),
+    this.address = const Value.absent(),
+    this.alternateContactName = const Value.absent(),
+    this.alternateContactNumber = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  SupportPersonRecordsCompanion.insert({
+    this.id = const Value.absent(),
+    this.fullName = const Value.absent(),
+    this.relationship = const Value.absent(),
+    this.contactNumber = const Value.absent(),
+    this.address = const Value.absent(),
+    this.alternateContactName = const Value.absent(),
+    this.alternateContactNumber = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  static Insertable<SupportPersonRecordEntry> custom({
+    Expression<int>? id,
+    Expression<String>? fullName,
+    Expression<String>? relationship,
+    Expression<String>? contactNumber,
+    Expression<String>? address,
+    Expression<String>? alternateContactName,
+    Expression<String>? alternateContactNumber,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (fullName != null) 'full_name': fullName,
+      if (relationship != null) 'relationship': relationship,
+      if (contactNumber != null) 'contact_number': contactNumber,
+      if (address != null) 'address': address,
+      if (alternateContactName != null)
+        'alternate_contact_name': alternateContactName,
+      if (alternateContactNumber != null)
+        'alternate_contact_number': alternateContactNumber,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  SupportPersonRecordsCompanion copyWith({
+    Value<int>? id,
+    Value<String?>? fullName,
+    Value<String?>? relationship,
+    Value<String?>? contactNumber,
+    Value<String?>? address,
+    Value<String?>? alternateContactName,
+    Value<String?>? alternateContactNumber,
+    Value<DateTime>? updatedAt,
+  }) {
+    return SupportPersonRecordsCompanion(
+      id: id ?? this.id,
+      fullName: fullName ?? this.fullName,
+      relationship: relationship ?? this.relationship,
+      contactNumber: contactNumber ?? this.contactNumber,
+      address: address ?? this.address,
+      alternateContactName: alternateContactName ?? this.alternateContactName,
+      alternateContactNumber:
+          alternateContactNumber ?? this.alternateContactNumber,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (fullName.present) {
+      map['full_name'] = Variable<String>(fullName.value);
+    }
+    if (relationship.present) {
+      map['relationship'] = Variable<String>(relationship.value);
+    }
+    if (contactNumber.present) {
+      map['contact_number'] = Variable<String>(contactNumber.value);
+    }
+    if (address.present) {
+      map['address'] = Variable<String>(address.value);
+    }
+    if (alternateContactName.present) {
+      map['alternate_contact_name'] = Variable<String>(
+        alternateContactName.value,
+      );
+    }
+    if (alternateContactNumber.present) {
+      map['alternate_contact_number'] = Variable<String>(
+        alternateContactNumber.value,
+      );
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SupportPersonRecordsCompanion(')
+          ..write('id: $id, ')
+          ..write('fullName: $fullName, ')
+          ..write('relationship: $relationship, ')
+          ..write('contactNumber: $contactNumber, ')
+          ..write('address: $address, ')
+          ..write('alternateContactName: $alternateContactName, ')
+          ..write('alternateContactNumber: $alternateContactNumber, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $EmergencyPlanRecordsTable extends EmergencyPlanRecords
+    with TableInfo<$EmergencyPlanRecordsTable, EmergencyPlanRecordEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EmergencyPlanRecordsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _primaryHospitalMeta = const VerificationMeta(
+    'primaryHospital',
+  );
+  @override
+  late final GeneratedColumn<String> primaryHospital = GeneratedColumn<String>(
+    'primary_hospital',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _backupHospitalMeta = const VerificationMeta(
+    'backupHospital',
+  );
+  @override
+  late final GeneratedColumn<String> backupHospital = GeneratedColumn<String>(
+    'backup_hospital',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _primaryTransportMeta = const VerificationMeta(
+    'primaryTransport',
+  );
+  @override
+  late final GeneratedColumn<String> primaryTransport = GeneratedColumn<String>(
+    'primary_transport',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _alternateTransportMeta =
+      const VerificationMeta('alternateTransport');
+  @override
+  late final GeneratedColumn<String> alternateTransport =
+      GeneratedColumn<String>(
+        'alternate_transport',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _primaryRouteMeta = const VerificationMeta(
+    'primaryRoute',
+  );
+  @override
+  late final GeneratedColumn<String> primaryRoute = GeneratedColumn<String>(
+    'primary_route',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _alternateRouteMeta = const VerificationMeta(
+    'alternateRoute',
+  );
+  @override
+  late final GeneratedColumn<String> alternateRoute = GeneratedColumn<String>(
+    'alternate_route',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _secondaryContactNameMeta =
+      const VerificationMeta('secondaryContactName');
+  @override
+  late final GeneratedColumn<String> secondaryContactName =
+      GeneratedColumn<String>(
+        'secondary_contact_name',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _secondaryContactNumberMeta =
+      const VerificationMeta('secondaryContactNumber');
+  @override
+  late final GeneratedColumn<String> secondaryContactNumber =
+      GeneratedColumn<String>(
+        'secondary_contact_number',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    primaryHospital,
+    backupHospital,
+    primaryTransport,
+    alternateTransport,
+    primaryRoute,
+    alternateRoute,
+    secondaryContactName,
+    secondaryContactNumber,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'emergency_plan_records';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<EmergencyPlanRecordEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('primary_hospital')) {
+      context.handle(
+        _primaryHospitalMeta,
+        primaryHospital.isAcceptableOrUnknown(
+          data['primary_hospital']!,
+          _primaryHospitalMeta,
+        ),
+      );
+    }
+    if (data.containsKey('backup_hospital')) {
+      context.handle(
+        _backupHospitalMeta,
+        backupHospital.isAcceptableOrUnknown(
+          data['backup_hospital']!,
+          _backupHospitalMeta,
+        ),
+      );
+    }
+    if (data.containsKey('primary_transport')) {
+      context.handle(
+        _primaryTransportMeta,
+        primaryTransport.isAcceptableOrUnknown(
+          data['primary_transport']!,
+          _primaryTransportMeta,
+        ),
+      );
+    }
+    if (data.containsKey('alternate_transport')) {
+      context.handle(
+        _alternateTransportMeta,
+        alternateTransport.isAcceptableOrUnknown(
+          data['alternate_transport']!,
+          _alternateTransportMeta,
+        ),
+      );
+    }
+    if (data.containsKey('primary_route')) {
+      context.handle(
+        _primaryRouteMeta,
+        primaryRoute.isAcceptableOrUnknown(
+          data['primary_route']!,
+          _primaryRouteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('alternate_route')) {
+      context.handle(
+        _alternateRouteMeta,
+        alternateRoute.isAcceptableOrUnknown(
+          data['alternate_route']!,
+          _alternateRouteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('secondary_contact_name')) {
+      context.handle(
+        _secondaryContactNameMeta,
+        secondaryContactName.isAcceptableOrUnknown(
+          data['secondary_contact_name']!,
+          _secondaryContactNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('secondary_contact_number')) {
+      context.handle(
+        _secondaryContactNumberMeta,
+        secondaryContactNumber.isAcceptableOrUnknown(
+          data['secondary_contact_number']!,
+          _secondaryContactNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  EmergencyPlanRecordEntry map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EmergencyPlanRecordEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      primaryHospital: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}primary_hospital'],
+      ),
+      backupHospital: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}backup_hospital'],
+      ),
+      primaryTransport: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}primary_transport'],
+      ),
+      alternateTransport: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}alternate_transport'],
+      ),
+      primaryRoute: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}primary_route'],
+      ),
+      alternateRoute: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}alternate_route'],
+      ),
+      secondaryContactName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}secondary_contact_name'],
+      ),
+      secondaryContactNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}secondary_contact_number'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $EmergencyPlanRecordsTable createAlias(String alias) {
+    return $EmergencyPlanRecordsTable(attachedDatabase, alias);
+  }
+}
+
+class EmergencyPlanRecordEntry extends DataClass
+    implements Insertable<EmergencyPlanRecordEntry> {
+  final int id;
+  final String? primaryHospital;
+  final String? backupHospital;
+  final String? primaryTransport;
+  final String? alternateTransport;
+  final String? primaryRoute;
+  final String? alternateRoute;
+  final String? secondaryContactName;
+  final String? secondaryContactNumber;
+  final DateTime updatedAt;
+  const EmergencyPlanRecordEntry({
+    required this.id,
+    this.primaryHospital,
+    this.backupHospital,
+    this.primaryTransport,
+    this.alternateTransport,
+    this.primaryRoute,
+    this.alternateRoute,
+    this.secondaryContactName,
+    this.secondaryContactNumber,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || primaryHospital != null) {
+      map['primary_hospital'] = Variable<String>(primaryHospital);
+    }
+    if (!nullToAbsent || backupHospital != null) {
+      map['backup_hospital'] = Variable<String>(backupHospital);
+    }
+    if (!nullToAbsent || primaryTransport != null) {
+      map['primary_transport'] = Variable<String>(primaryTransport);
+    }
+    if (!nullToAbsent || alternateTransport != null) {
+      map['alternate_transport'] = Variable<String>(alternateTransport);
+    }
+    if (!nullToAbsent || primaryRoute != null) {
+      map['primary_route'] = Variable<String>(primaryRoute);
+    }
+    if (!nullToAbsent || alternateRoute != null) {
+      map['alternate_route'] = Variable<String>(alternateRoute);
+    }
+    if (!nullToAbsent || secondaryContactName != null) {
+      map['secondary_contact_name'] = Variable<String>(secondaryContactName);
+    }
+    if (!nullToAbsent || secondaryContactNumber != null) {
+      map['secondary_contact_number'] = Variable<String>(
+        secondaryContactNumber,
+      );
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  EmergencyPlanRecordsCompanion toCompanion(bool nullToAbsent) {
+    return EmergencyPlanRecordsCompanion(
+      id: Value(id),
+      primaryHospital: primaryHospital == null && nullToAbsent
+          ? const Value.absent()
+          : Value(primaryHospital),
+      backupHospital: backupHospital == null && nullToAbsent
+          ? const Value.absent()
+          : Value(backupHospital),
+      primaryTransport: primaryTransport == null && nullToAbsent
+          ? const Value.absent()
+          : Value(primaryTransport),
+      alternateTransport: alternateTransport == null && nullToAbsent
+          ? const Value.absent()
+          : Value(alternateTransport),
+      primaryRoute: primaryRoute == null && nullToAbsent
+          ? const Value.absent()
+          : Value(primaryRoute),
+      alternateRoute: alternateRoute == null && nullToAbsent
+          ? const Value.absent()
+          : Value(alternateRoute),
+      secondaryContactName: secondaryContactName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(secondaryContactName),
+      secondaryContactNumber: secondaryContactNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(secondaryContactNumber),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory EmergencyPlanRecordEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EmergencyPlanRecordEntry(
+      id: serializer.fromJson<int>(json['id']),
+      primaryHospital: serializer.fromJson<String?>(json['primaryHospital']),
+      backupHospital: serializer.fromJson<String?>(json['backupHospital']),
+      primaryTransport: serializer.fromJson<String?>(json['primaryTransport']),
+      alternateTransport: serializer.fromJson<String?>(
+        json['alternateTransport'],
+      ),
+      primaryRoute: serializer.fromJson<String?>(json['primaryRoute']),
+      alternateRoute: serializer.fromJson<String?>(json['alternateRoute']),
+      secondaryContactName: serializer.fromJson<String?>(
+        json['secondaryContactName'],
+      ),
+      secondaryContactNumber: serializer.fromJson<String?>(
+        json['secondaryContactNumber'],
+      ),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'primaryHospital': serializer.toJson<String?>(primaryHospital),
+      'backupHospital': serializer.toJson<String?>(backupHospital),
+      'primaryTransport': serializer.toJson<String?>(primaryTransport),
+      'alternateTransport': serializer.toJson<String?>(alternateTransport),
+      'primaryRoute': serializer.toJson<String?>(primaryRoute),
+      'alternateRoute': serializer.toJson<String?>(alternateRoute),
+      'secondaryContactName': serializer.toJson<String?>(secondaryContactName),
+      'secondaryContactNumber': serializer.toJson<String?>(
+        secondaryContactNumber,
+      ),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  EmergencyPlanRecordEntry copyWith({
+    int? id,
+    Value<String?> primaryHospital = const Value.absent(),
+    Value<String?> backupHospital = const Value.absent(),
+    Value<String?> primaryTransport = const Value.absent(),
+    Value<String?> alternateTransport = const Value.absent(),
+    Value<String?> primaryRoute = const Value.absent(),
+    Value<String?> alternateRoute = const Value.absent(),
+    Value<String?> secondaryContactName = const Value.absent(),
+    Value<String?> secondaryContactNumber = const Value.absent(),
+    DateTime? updatedAt,
+  }) => EmergencyPlanRecordEntry(
+    id: id ?? this.id,
+    primaryHospital: primaryHospital.present
+        ? primaryHospital.value
+        : this.primaryHospital,
+    backupHospital: backupHospital.present
+        ? backupHospital.value
+        : this.backupHospital,
+    primaryTransport: primaryTransport.present
+        ? primaryTransport.value
+        : this.primaryTransport,
+    alternateTransport: alternateTransport.present
+        ? alternateTransport.value
+        : this.alternateTransport,
+    primaryRoute: primaryRoute.present ? primaryRoute.value : this.primaryRoute,
+    alternateRoute: alternateRoute.present
+        ? alternateRoute.value
+        : this.alternateRoute,
+    secondaryContactName: secondaryContactName.present
+        ? secondaryContactName.value
+        : this.secondaryContactName,
+    secondaryContactNumber: secondaryContactNumber.present
+        ? secondaryContactNumber.value
+        : this.secondaryContactNumber,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  EmergencyPlanRecordEntry copyWithCompanion(
+    EmergencyPlanRecordsCompanion data,
+  ) {
+    return EmergencyPlanRecordEntry(
+      id: data.id.present ? data.id.value : this.id,
+      primaryHospital: data.primaryHospital.present
+          ? data.primaryHospital.value
+          : this.primaryHospital,
+      backupHospital: data.backupHospital.present
+          ? data.backupHospital.value
+          : this.backupHospital,
+      primaryTransport: data.primaryTransport.present
+          ? data.primaryTransport.value
+          : this.primaryTransport,
+      alternateTransport: data.alternateTransport.present
+          ? data.alternateTransport.value
+          : this.alternateTransport,
+      primaryRoute: data.primaryRoute.present
+          ? data.primaryRoute.value
+          : this.primaryRoute,
+      alternateRoute: data.alternateRoute.present
+          ? data.alternateRoute.value
+          : this.alternateRoute,
+      secondaryContactName: data.secondaryContactName.present
+          ? data.secondaryContactName.value
+          : this.secondaryContactName,
+      secondaryContactNumber: data.secondaryContactNumber.present
+          ? data.secondaryContactNumber.value
+          : this.secondaryContactNumber,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EmergencyPlanRecordEntry(')
+          ..write('id: $id, ')
+          ..write('primaryHospital: $primaryHospital, ')
+          ..write('backupHospital: $backupHospital, ')
+          ..write('primaryTransport: $primaryTransport, ')
+          ..write('alternateTransport: $alternateTransport, ')
+          ..write('primaryRoute: $primaryRoute, ')
+          ..write('alternateRoute: $alternateRoute, ')
+          ..write('secondaryContactName: $secondaryContactName, ')
+          ..write('secondaryContactNumber: $secondaryContactNumber, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    primaryHospital,
+    backupHospital,
+    primaryTransport,
+    alternateTransport,
+    primaryRoute,
+    alternateRoute,
+    secondaryContactName,
+    secondaryContactNumber,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EmergencyPlanRecordEntry &&
+          other.id == this.id &&
+          other.primaryHospital == this.primaryHospital &&
+          other.backupHospital == this.backupHospital &&
+          other.primaryTransport == this.primaryTransport &&
+          other.alternateTransport == this.alternateTransport &&
+          other.primaryRoute == this.primaryRoute &&
+          other.alternateRoute == this.alternateRoute &&
+          other.secondaryContactName == this.secondaryContactName &&
+          other.secondaryContactNumber == this.secondaryContactNumber &&
+          other.updatedAt == this.updatedAt);
+}
+
+class EmergencyPlanRecordsCompanion
+    extends UpdateCompanion<EmergencyPlanRecordEntry> {
+  final Value<int> id;
+  final Value<String?> primaryHospital;
+  final Value<String?> backupHospital;
+  final Value<String?> primaryTransport;
+  final Value<String?> alternateTransport;
+  final Value<String?> primaryRoute;
+  final Value<String?> alternateRoute;
+  final Value<String?> secondaryContactName;
+  final Value<String?> secondaryContactNumber;
+  final Value<DateTime> updatedAt;
+  const EmergencyPlanRecordsCompanion({
+    this.id = const Value.absent(),
+    this.primaryHospital = const Value.absent(),
+    this.backupHospital = const Value.absent(),
+    this.primaryTransport = const Value.absent(),
+    this.alternateTransport = const Value.absent(),
+    this.primaryRoute = const Value.absent(),
+    this.alternateRoute = const Value.absent(),
+    this.secondaryContactName = const Value.absent(),
+    this.secondaryContactNumber = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  EmergencyPlanRecordsCompanion.insert({
+    this.id = const Value.absent(),
+    this.primaryHospital = const Value.absent(),
+    this.backupHospital = const Value.absent(),
+    this.primaryTransport = const Value.absent(),
+    this.alternateTransport = const Value.absent(),
+    this.primaryRoute = const Value.absent(),
+    this.alternateRoute = const Value.absent(),
+    this.secondaryContactName = const Value.absent(),
+    this.secondaryContactNumber = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  static Insertable<EmergencyPlanRecordEntry> custom({
+    Expression<int>? id,
+    Expression<String>? primaryHospital,
+    Expression<String>? backupHospital,
+    Expression<String>? primaryTransport,
+    Expression<String>? alternateTransport,
+    Expression<String>? primaryRoute,
+    Expression<String>? alternateRoute,
+    Expression<String>? secondaryContactName,
+    Expression<String>? secondaryContactNumber,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (primaryHospital != null) 'primary_hospital': primaryHospital,
+      if (backupHospital != null) 'backup_hospital': backupHospital,
+      if (primaryTransport != null) 'primary_transport': primaryTransport,
+      if (alternateTransport != null) 'alternate_transport': alternateTransport,
+      if (primaryRoute != null) 'primary_route': primaryRoute,
+      if (alternateRoute != null) 'alternate_route': alternateRoute,
+      if (secondaryContactName != null)
+        'secondary_contact_name': secondaryContactName,
+      if (secondaryContactNumber != null)
+        'secondary_contact_number': secondaryContactNumber,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  EmergencyPlanRecordsCompanion copyWith({
+    Value<int>? id,
+    Value<String?>? primaryHospital,
+    Value<String?>? backupHospital,
+    Value<String?>? primaryTransport,
+    Value<String?>? alternateTransport,
+    Value<String?>? primaryRoute,
+    Value<String?>? alternateRoute,
+    Value<String?>? secondaryContactName,
+    Value<String?>? secondaryContactNumber,
+    Value<DateTime>? updatedAt,
+  }) {
+    return EmergencyPlanRecordsCompanion(
+      id: id ?? this.id,
+      primaryHospital: primaryHospital ?? this.primaryHospital,
+      backupHospital: backupHospital ?? this.backupHospital,
+      primaryTransport: primaryTransport ?? this.primaryTransport,
+      alternateTransport: alternateTransport ?? this.alternateTransport,
+      primaryRoute: primaryRoute ?? this.primaryRoute,
+      alternateRoute: alternateRoute ?? this.alternateRoute,
+      secondaryContactName: secondaryContactName ?? this.secondaryContactName,
+      secondaryContactNumber:
+          secondaryContactNumber ?? this.secondaryContactNumber,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (primaryHospital.present) {
+      map['primary_hospital'] = Variable<String>(primaryHospital.value);
+    }
+    if (backupHospital.present) {
+      map['backup_hospital'] = Variable<String>(backupHospital.value);
+    }
+    if (primaryTransport.present) {
+      map['primary_transport'] = Variable<String>(primaryTransport.value);
+    }
+    if (alternateTransport.present) {
+      map['alternate_transport'] = Variable<String>(alternateTransport.value);
+    }
+    if (primaryRoute.present) {
+      map['primary_route'] = Variable<String>(primaryRoute.value);
+    }
+    if (alternateRoute.present) {
+      map['alternate_route'] = Variable<String>(alternateRoute.value);
+    }
+    if (secondaryContactName.present) {
+      map['secondary_contact_name'] = Variable<String>(
+        secondaryContactName.value,
+      );
+    }
+    if (secondaryContactNumber.present) {
+      map['secondary_contact_number'] = Variable<String>(
+        secondaryContactNumber.value,
+      );
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EmergencyPlanRecordsCompanion(')
+          ..write('id: $id, ')
+          ..write('primaryHospital: $primaryHospital, ')
+          ..write('backupHospital: $backupHospital, ')
+          ..write('primaryTransport: $primaryTransport, ')
+          ..write('alternateTransport: $alternateTransport, ')
+          ..write('primaryRoute: $primaryRoute, ')
+          ..write('alternateRoute: $alternateRoute, ')
+          ..write('secondaryContactName: $secondaryContactName, ')
+          ..write('secondaryContactNumber: $secondaryContactNumber, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1107,6 +3249,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $ChecklistItemsTable checklistItems = $ChecklistItemsTable(this);
+  late final $DangerSignsScreeningsTable dangerSignsScreenings =
+      $DangerSignsScreeningsTable(this);
+  late final $DeliveryPlanRecordsTable deliveryPlanRecords =
+      $DeliveryPlanRecordsTable(this);
+  late final $SupportPersonRecordsTable supportPersonRecords =
+      $SupportPersonRecordsTable(this);
+  late final $EmergencyPlanRecordsTable emergencyPlanRecords =
+      $EmergencyPlanRecordsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1114,6 +3264,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     assessmentScores,
     checklistItems,
+    dangerSignsScreenings,
+    deliveryPlanRecords,
+    supportPersonRecords,
+    emergencyPlanRecords,
   ];
 }
 
@@ -1663,6 +3817,1079 @@ typedef $$ChecklistItemsTableProcessedTableManager =
       ChecklistItemEntry,
       PrefetchHooks Function()
     >;
+typedef $$DangerSignsScreeningsTableCreateCompanionBuilder =
+    DangerSignsScreeningsCompanion Function({
+      Value<int> id,
+      Value<bool> isDangerDetected,
+      Value<String?> triggeringQuestionIds,
+      Value<DateTime> completedAt,
+      Value<DateTime> updatedAt,
+    });
+typedef $$DangerSignsScreeningsTableUpdateCompanionBuilder =
+    DangerSignsScreeningsCompanion Function({
+      Value<int> id,
+      Value<bool> isDangerDetected,
+      Value<String?> triggeringQuestionIds,
+      Value<DateTime> completedAt,
+      Value<DateTime> updatedAt,
+    });
+
+class $$DangerSignsScreeningsTableFilterComposer
+    extends Composer<_$AppDatabase, $DangerSignsScreeningsTable> {
+  $$DangerSignsScreeningsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDangerDetected => $composableBuilder(
+    column: $table.isDangerDetected,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get triggeringQuestionIds => $composableBuilder(
+    column: $table.triggeringQuestionIds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$DangerSignsScreeningsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DangerSignsScreeningsTable> {
+  $$DangerSignsScreeningsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDangerDetected => $composableBuilder(
+    column: $table.isDangerDetected,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get triggeringQuestionIds => $composableBuilder(
+    column: $table.triggeringQuestionIds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DangerSignsScreeningsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DangerSignsScreeningsTable> {
+  $$DangerSignsScreeningsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDangerDetected => $composableBuilder(
+    column: $table.isDangerDetected,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get triggeringQuestionIds => $composableBuilder(
+    column: $table.triggeringQuestionIds,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$DangerSignsScreeningsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DangerSignsScreeningsTable,
+          DangerSignsScreeningEntry,
+          $$DangerSignsScreeningsTableFilterComposer,
+          $$DangerSignsScreeningsTableOrderingComposer,
+          $$DangerSignsScreeningsTableAnnotationComposer,
+          $$DangerSignsScreeningsTableCreateCompanionBuilder,
+          $$DangerSignsScreeningsTableUpdateCompanionBuilder,
+          (
+            DangerSignsScreeningEntry,
+            BaseReferences<
+              _$AppDatabase,
+              $DangerSignsScreeningsTable,
+              DangerSignsScreeningEntry
+            >,
+          ),
+          DangerSignsScreeningEntry,
+          PrefetchHooks Function()
+        > {
+  $$DangerSignsScreeningsTableTableManager(
+    _$AppDatabase db,
+    $DangerSignsScreeningsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DangerSignsScreeningsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$DangerSignsScreeningsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$DangerSignsScreeningsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<bool> isDangerDetected = const Value.absent(),
+                Value<String?> triggeringQuestionIds = const Value.absent(),
+                Value<DateTime> completedAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => DangerSignsScreeningsCompanion(
+                id: id,
+                isDangerDetected: isDangerDetected,
+                triggeringQuestionIds: triggeringQuestionIds,
+                completedAt: completedAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<bool> isDangerDetected = const Value.absent(),
+                Value<String?> triggeringQuestionIds = const Value.absent(),
+                Value<DateTime> completedAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => DangerSignsScreeningsCompanion.insert(
+                id: id,
+                isDangerDetected: isDangerDetected,
+                triggeringQuestionIds: triggeringQuestionIds,
+                completedAt: completedAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DangerSignsScreeningsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DangerSignsScreeningsTable,
+      DangerSignsScreeningEntry,
+      $$DangerSignsScreeningsTableFilterComposer,
+      $$DangerSignsScreeningsTableOrderingComposer,
+      $$DangerSignsScreeningsTableAnnotationComposer,
+      $$DangerSignsScreeningsTableCreateCompanionBuilder,
+      $$DangerSignsScreeningsTableUpdateCompanionBuilder,
+      (
+        DangerSignsScreeningEntry,
+        BaseReferences<
+          _$AppDatabase,
+          $DangerSignsScreeningsTable,
+          DangerSignsScreeningEntry
+        >,
+      ),
+      DangerSignsScreeningEntry,
+      PrefetchHooks Function()
+    >;
+typedef $$DeliveryPlanRecordsTableCreateCompanionBuilder =
+    DeliveryPlanRecordsCompanion Function({
+      Value<int> id,
+      Value<String?> preferredFacility,
+      Value<String?> primaryTransport,
+      Value<String?> accompaniedBy,
+      Value<bool> discussedWithSupportPerson,
+      Value<String?> backupPlanNotes,
+      Value<DateTime> updatedAt,
+    });
+typedef $$DeliveryPlanRecordsTableUpdateCompanionBuilder =
+    DeliveryPlanRecordsCompanion Function({
+      Value<int> id,
+      Value<String?> preferredFacility,
+      Value<String?> primaryTransport,
+      Value<String?> accompaniedBy,
+      Value<bool> discussedWithSupportPerson,
+      Value<String?> backupPlanNotes,
+      Value<DateTime> updatedAt,
+    });
+
+class $$DeliveryPlanRecordsTableFilterComposer
+    extends Composer<_$AppDatabase, $DeliveryPlanRecordsTable> {
+  $$DeliveryPlanRecordsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get preferredFacility => $composableBuilder(
+    column: $table.preferredFacility,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get primaryTransport => $composableBuilder(
+    column: $table.primaryTransport,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accompaniedBy => $composableBuilder(
+    column: $table.accompaniedBy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get discussedWithSupportPerson => $composableBuilder(
+    column: $table.discussedWithSupportPerson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get backupPlanNotes => $composableBuilder(
+    column: $table.backupPlanNotes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$DeliveryPlanRecordsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DeliveryPlanRecordsTable> {
+  $$DeliveryPlanRecordsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get preferredFacility => $composableBuilder(
+    column: $table.preferredFacility,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get primaryTransport => $composableBuilder(
+    column: $table.primaryTransport,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accompaniedBy => $composableBuilder(
+    column: $table.accompaniedBy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get discussedWithSupportPerson => $composableBuilder(
+    column: $table.discussedWithSupportPerson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get backupPlanNotes => $composableBuilder(
+    column: $table.backupPlanNotes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DeliveryPlanRecordsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DeliveryPlanRecordsTable> {
+  $$DeliveryPlanRecordsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get preferredFacility => $composableBuilder(
+    column: $table.preferredFacility,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get primaryTransport => $composableBuilder(
+    column: $table.primaryTransport,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get accompaniedBy => $composableBuilder(
+    column: $table.accompaniedBy,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get discussedWithSupportPerson => $composableBuilder(
+    column: $table.discussedWithSupportPerson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get backupPlanNotes => $composableBuilder(
+    column: $table.backupPlanNotes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$DeliveryPlanRecordsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DeliveryPlanRecordsTable,
+          DeliveryPlanRecordEntry,
+          $$DeliveryPlanRecordsTableFilterComposer,
+          $$DeliveryPlanRecordsTableOrderingComposer,
+          $$DeliveryPlanRecordsTableAnnotationComposer,
+          $$DeliveryPlanRecordsTableCreateCompanionBuilder,
+          $$DeliveryPlanRecordsTableUpdateCompanionBuilder,
+          (
+            DeliveryPlanRecordEntry,
+            BaseReferences<
+              _$AppDatabase,
+              $DeliveryPlanRecordsTable,
+              DeliveryPlanRecordEntry
+            >,
+          ),
+          DeliveryPlanRecordEntry,
+          PrefetchHooks Function()
+        > {
+  $$DeliveryPlanRecordsTableTableManager(
+    _$AppDatabase db,
+    $DeliveryPlanRecordsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DeliveryPlanRecordsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DeliveryPlanRecordsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$DeliveryPlanRecordsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> preferredFacility = const Value.absent(),
+                Value<String?> primaryTransport = const Value.absent(),
+                Value<String?> accompaniedBy = const Value.absent(),
+                Value<bool> discussedWithSupportPerson = const Value.absent(),
+                Value<String?> backupPlanNotes = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => DeliveryPlanRecordsCompanion(
+                id: id,
+                preferredFacility: preferredFacility,
+                primaryTransport: primaryTransport,
+                accompaniedBy: accompaniedBy,
+                discussedWithSupportPerson: discussedWithSupportPerson,
+                backupPlanNotes: backupPlanNotes,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> preferredFacility = const Value.absent(),
+                Value<String?> primaryTransport = const Value.absent(),
+                Value<String?> accompaniedBy = const Value.absent(),
+                Value<bool> discussedWithSupportPerson = const Value.absent(),
+                Value<String?> backupPlanNotes = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => DeliveryPlanRecordsCompanion.insert(
+                id: id,
+                preferredFacility: preferredFacility,
+                primaryTransport: primaryTransport,
+                accompaniedBy: accompaniedBy,
+                discussedWithSupportPerson: discussedWithSupportPerson,
+                backupPlanNotes: backupPlanNotes,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DeliveryPlanRecordsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DeliveryPlanRecordsTable,
+      DeliveryPlanRecordEntry,
+      $$DeliveryPlanRecordsTableFilterComposer,
+      $$DeliveryPlanRecordsTableOrderingComposer,
+      $$DeliveryPlanRecordsTableAnnotationComposer,
+      $$DeliveryPlanRecordsTableCreateCompanionBuilder,
+      $$DeliveryPlanRecordsTableUpdateCompanionBuilder,
+      (
+        DeliveryPlanRecordEntry,
+        BaseReferences<
+          _$AppDatabase,
+          $DeliveryPlanRecordsTable,
+          DeliveryPlanRecordEntry
+        >,
+      ),
+      DeliveryPlanRecordEntry,
+      PrefetchHooks Function()
+    >;
+typedef $$SupportPersonRecordsTableCreateCompanionBuilder =
+    SupportPersonRecordsCompanion Function({
+      Value<int> id,
+      Value<String?> fullName,
+      Value<String?> relationship,
+      Value<String?> contactNumber,
+      Value<String?> address,
+      Value<String?> alternateContactName,
+      Value<String?> alternateContactNumber,
+      Value<DateTime> updatedAt,
+    });
+typedef $$SupportPersonRecordsTableUpdateCompanionBuilder =
+    SupportPersonRecordsCompanion Function({
+      Value<int> id,
+      Value<String?> fullName,
+      Value<String?> relationship,
+      Value<String?> contactNumber,
+      Value<String?> address,
+      Value<String?> alternateContactName,
+      Value<String?> alternateContactNumber,
+      Value<DateTime> updatedAt,
+    });
+
+class $$SupportPersonRecordsTableFilterComposer
+    extends Composer<_$AppDatabase, $SupportPersonRecordsTable> {
+  $$SupportPersonRecordsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fullName => $composableBuilder(
+    column: $table.fullName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get relationship => $composableBuilder(
+    column: $table.relationship,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contactNumber => $composableBuilder(
+    column: $table.contactNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get alternateContactName => $composableBuilder(
+    column: $table.alternateContactName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get alternateContactNumber => $composableBuilder(
+    column: $table.alternateContactNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SupportPersonRecordsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SupportPersonRecordsTable> {
+  $$SupportPersonRecordsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fullName => $composableBuilder(
+    column: $table.fullName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get relationship => $composableBuilder(
+    column: $table.relationship,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contactNumber => $composableBuilder(
+    column: $table.contactNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get alternateContactName => $composableBuilder(
+    column: $table.alternateContactName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get alternateContactNumber => $composableBuilder(
+    column: $table.alternateContactNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SupportPersonRecordsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SupportPersonRecordsTable> {
+  $$SupportPersonRecordsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get fullName =>
+      $composableBuilder(column: $table.fullName, builder: (column) => column);
+
+  GeneratedColumn<String> get relationship => $composableBuilder(
+    column: $table.relationship,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get contactNumber => $composableBuilder(
+    column: $table.contactNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get address =>
+      $composableBuilder(column: $table.address, builder: (column) => column);
+
+  GeneratedColumn<String> get alternateContactName => $composableBuilder(
+    column: $table.alternateContactName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get alternateContactNumber => $composableBuilder(
+    column: $table.alternateContactNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$SupportPersonRecordsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SupportPersonRecordsTable,
+          SupportPersonRecordEntry,
+          $$SupportPersonRecordsTableFilterComposer,
+          $$SupportPersonRecordsTableOrderingComposer,
+          $$SupportPersonRecordsTableAnnotationComposer,
+          $$SupportPersonRecordsTableCreateCompanionBuilder,
+          $$SupportPersonRecordsTableUpdateCompanionBuilder,
+          (
+            SupportPersonRecordEntry,
+            BaseReferences<
+              _$AppDatabase,
+              $SupportPersonRecordsTable,
+              SupportPersonRecordEntry
+            >,
+          ),
+          SupportPersonRecordEntry,
+          PrefetchHooks Function()
+        > {
+  $$SupportPersonRecordsTableTableManager(
+    _$AppDatabase db,
+    $SupportPersonRecordsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SupportPersonRecordsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SupportPersonRecordsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$SupportPersonRecordsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> fullName = const Value.absent(),
+                Value<String?> relationship = const Value.absent(),
+                Value<String?> contactNumber = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<String?> alternateContactName = const Value.absent(),
+                Value<String?> alternateContactNumber = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => SupportPersonRecordsCompanion(
+                id: id,
+                fullName: fullName,
+                relationship: relationship,
+                contactNumber: contactNumber,
+                address: address,
+                alternateContactName: alternateContactName,
+                alternateContactNumber: alternateContactNumber,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> fullName = const Value.absent(),
+                Value<String?> relationship = const Value.absent(),
+                Value<String?> contactNumber = const Value.absent(),
+                Value<String?> address = const Value.absent(),
+                Value<String?> alternateContactName = const Value.absent(),
+                Value<String?> alternateContactNumber = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => SupportPersonRecordsCompanion.insert(
+                id: id,
+                fullName: fullName,
+                relationship: relationship,
+                contactNumber: contactNumber,
+                address: address,
+                alternateContactName: alternateContactName,
+                alternateContactNumber: alternateContactNumber,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SupportPersonRecordsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SupportPersonRecordsTable,
+      SupportPersonRecordEntry,
+      $$SupportPersonRecordsTableFilterComposer,
+      $$SupportPersonRecordsTableOrderingComposer,
+      $$SupportPersonRecordsTableAnnotationComposer,
+      $$SupportPersonRecordsTableCreateCompanionBuilder,
+      $$SupportPersonRecordsTableUpdateCompanionBuilder,
+      (
+        SupportPersonRecordEntry,
+        BaseReferences<
+          _$AppDatabase,
+          $SupportPersonRecordsTable,
+          SupportPersonRecordEntry
+        >,
+      ),
+      SupportPersonRecordEntry,
+      PrefetchHooks Function()
+    >;
+typedef $$EmergencyPlanRecordsTableCreateCompanionBuilder =
+    EmergencyPlanRecordsCompanion Function({
+      Value<int> id,
+      Value<String?> primaryHospital,
+      Value<String?> backupHospital,
+      Value<String?> primaryTransport,
+      Value<String?> alternateTransport,
+      Value<String?> primaryRoute,
+      Value<String?> alternateRoute,
+      Value<String?> secondaryContactName,
+      Value<String?> secondaryContactNumber,
+      Value<DateTime> updatedAt,
+    });
+typedef $$EmergencyPlanRecordsTableUpdateCompanionBuilder =
+    EmergencyPlanRecordsCompanion Function({
+      Value<int> id,
+      Value<String?> primaryHospital,
+      Value<String?> backupHospital,
+      Value<String?> primaryTransport,
+      Value<String?> alternateTransport,
+      Value<String?> primaryRoute,
+      Value<String?> alternateRoute,
+      Value<String?> secondaryContactName,
+      Value<String?> secondaryContactNumber,
+      Value<DateTime> updatedAt,
+    });
+
+class $$EmergencyPlanRecordsTableFilterComposer
+    extends Composer<_$AppDatabase, $EmergencyPlanRecordsTable> {
+  $$EmergencyPlanRecordsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get primaryHospital => $composableBuilder(
+    column: $table.primaryHospital,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get backupHospital => $composableBuilder(
+    column: $table.backupHospital,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get primaryTransport => $composableBuilder(
+    column: $table.primaryTransport,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get alternateTransport => $composableBuilder(
+    column: $table.alternateTransport,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get primaryRoute => $composableBuilder(
+    column: $table.primaryRoute,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get alternateRoute => $composableBuilder(
+    column: $table.alternateRoute,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get secondaryContactName => $composableBuilder(
+    column: $table.secondaryContactName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get secondaryContactNumber => $composableBuilder(
+    column: $table.secondaryContactNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$EmergencyPlanRecordsTableOrderingComposer
+    extends Composer<_$AppDatabase, $EmergencyPlanRecordsTable> {
+  $$EmergencyPlanRecordsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get primaryHospital => $composableBuilder(
+    column: $table.primaryHospital,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get backupHospital => $composableBuilder(
+    column: $table.backupHospital,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get primaryTransport => $composableBuilder(
+    column: $table.primaryTransport,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get alternateTransport => $composableBuilder(
+    column: $table.alternateTransport,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get primaryRoute => $composableBuilder(
+    column: $table.primaryRoute,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get alternateRoute => $composableBuilder(
+    column: $table.alternateRoute,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get secondaryContactName => $composableBuilder(
+    column: $table.secondaryContactName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get secondaryContactNumber => $composableBuilder(
+    column: $table.secondaryContactNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$EmergencyPlanRecordsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $EmergencyPlanRecordsTable> {
+  $$EmergencyPlanRecordsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get primaryHospital => $composableBuilder(
+    column: $table.primaryHospital,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get backupHospital => $composableBuilder(
+    column: $table.backupHospital,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get primaryTransport => $composableBuilder(
+    column: $table.primaryTransport,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get alternateTransport => $composableBuilder(
+    column: $table.alternateTransport,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get primaryRoute => $composableBuilder(
+    column: $table.primaryRoute,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get alternateRoute => $composableBuilder(
+    column: $table.alternateRoute,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get secondaryContactName => $composableBuilder(
+    column: $table.secondaryContactName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get secondaryContactNumber => $composableBuilder(
+    column: $table.secondaryContactNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$EmergencyPlanRecordsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $EmergencyPlanRecordsTable,
+          EmergencyPlanRecordEntry,
+          $$EmergencyPlanRecordsTableFilterComposer,
+          $$EmergencyPlanRecordsTableOrderingComposer,
+          $$EmergencyPlanRecordsTableAnnotationComposer,
+          $$EmergencyPlanRecordsTableCreateCompanionBuilder,
+          $$EmergencyPlanRecordsTableUpdateCompanionBuilder,
+          (
+            EmergencyPlanRecordEntry,
+            BaseReferences<
+              _$AppDatabase,
+              $EmergencyPlanRecordsTable,
+              EmergencyPlanRecordEntry
+            >,
+          ),
+          EmergencyPlanRecordEntry,
+          PrefetchHooks Function()
+        > {
+  $$EmergencyPlanRecordsTableTableManager(
+    _$AppDatabase db,
+    $EmergencyPlanRecordsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EmergencyPlanRecordsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$EmergencyPlanRecordsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$EmergencyPlanRecordsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> primaryHospital = const Value.absent(),
+                Value<String?> backupHospital = const Value.absent(),
+                Value<String?> primaryTransport = const Value.absent(),
+                Value<String?> alternateTransport = const Value.absent(),
+                Value<String?> primaryRoute = const Value.absent(),
+                Value<String?> alternateRoute = const Value.absent(),
+                Value<String?> secondaryContactName = const Value.absent(),
+                Value<String?> secondaryContactNumber = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => EmergencyPlanRecordsCompanion(
+                id: id,
+                primaryHospital: primaryHospital,
+                backupHospital: backupHospital,
+                primaryTransport: primaryTransport,
+                alternateTransport: alternateTransport,
+                primaryRoute: primaryRoute,
+                alternateRoute: alternateRoute,
+                secondaryContactName: secondaryContactName,
+                secondaryContactNumber: secondaryContactNumber,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> primaryHospital = const Value.absent(),
+                Value<String?> backupHospital = const Value.absent(),
+                Value<String?> primaryTransport = const Value.absent(),
+                Value<String?> alternateTransport = const Value.absent(),
+                Value<String?> primaryRoute = const Value.absent(),
+                Value<String?> alternateRoute = const Value.absent(),
+                Value<String?> secondaryContactName = const Value.absent(),
+                Value<String?> secondaryContactNumber = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => EmergencyPlanRecordsCompanion.insert(
+                id: id,
+                primaryHospital: primaryHospital,
+                backupHospital: backupHospital,
+                primaryTransport: primaryTransport,
+                alternateTransport: alternateTransport,
+                primaryRoute: primaryRoute,
+                alternateRoute: alternateRoute,
+                secondaryContactName: secondaryContactName,
+                secondaryContactNumber: secondaryContactNumber,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$EmergencyPlanRecordsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $EmergencyPlanRecordsTable,
+      EmergencyPlanRecordEntry,
+      $$EmergencyPlanRecordsTableFilterComposer,
+      $$EmergencyPlanRecordsTableOrderingComposer,
+      $$EmergencyPlanRecordsTableAnnotationComposer,
+      $$EmergencyPlanRecordsTableCreateCompanionBuilder,
+      $$EmergencyPlanRecordsTableUpdateCompanionBuilder,
+      (
+        EmergencyPlanRecordEntry,
+        BaseReferences<
+          _$AppDatabase,
+          $EmergencyPlanRecordsTable,
+          EmergencyPlanRecordEntry
+        >,
+      ),
+      EmergencyPlanRecordEntry,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1671,4 +4898,12 @@ class $AppDatabaseManager {
       $$AssessmentScoresTableTableManager(_db, _db.assessmentScores);
   $$ChecklistItemsTableTableManager get checklistItems =>
       $$ChecklistItemsTableTableManager(_db, _db.checklistItems);
+  $$DangerSignsScreeningsTableTableManager get dangerSignsScreenings =>
+      $$DangerSignsScreeningsTableTableManager(_db, _db.dangerSignsScreenings);
+  $$DeliveryPlanRecordsTableTableManager get deliveryPlanRecords =>
+      $$DeliveryPlanRecordsTableTableManager(_db, _db.deliveryPlanRecords);
+  $$SupportPersonRecordsTableTableManager get supportPersonRecords =>
+      $$SupportPersonRecordsTableTableManager(_db, _db.supportPersonRecords);
+  $$EmergencyPlanRecordsTableTableManager get emergencyPlanRecords =>
+      $$EmergencyPlanRecordsTableTableManager(_db, _db.emergencyPlanRecords);
 }

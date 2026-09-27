@@ -97,5 +97,78 @@
     "done": "Done",
     "delete": "Delete",
     "edit": "Edit"
+  },
+
+  "sample_questions": {
+    "delivery_plan": {
+      "q1": "Where do you plan to give birth?",
+      "q1_a": "At the hospital or birthing facility where I have my prenatal checkups",
+      "q1_b": "At home because it is more comfortable",
+      "q1_c": "I will decide when labor starts",
+      "q1_d": "I am still looking for a place",
+      "q2": "How will you get to the health facility when labor starts?",
+      "q2_a": "I will wait for my husband or family to find a ride",
+      "q2_b": "I already have a planned ride, such as a tricycle, car, or other transportation",
+      "q2_c": "I will find a ride only when labor starts",
+      "q2_d": "I have not thought about it yet"
+    },
+    "hospital_bag": {
+      "q1": "Have you already prepared the necessary items that you may need during your hospital stay?",
+      "q1_a": "Yes, I have prepared most or all of the necessary items",
+      "q1_b": "I have prepared some items but still need to complete the bag",
+      "q1_c": "I have only started preparing a few items",
+      "q1_d": "I have not prepared any items yet",
+      "q2": "Have you prepared the necessary clothes and personal items for yourself?",
+      "q2_a": "Yes, I have prepared enough clothes and personal hygiene items",
+      "q2_b": "I have prepared some but still need additional items",
+      "q2_c": "I know what I need but have not prepared them yet",
+      "q2_d": "I am not sure what items I need"
+    },
+    "emergency_plan": {
+      "q1": "What should you do if you have heavy vaginal bleeding during pregnancy?",
+      "q1_a": "Rest and wait for it to stop.",
+      "q1_b": "Seek medical help immediately.",
+      "q1_c": "Drink more water.",
+      "q1_d": "Ignore it.",
+      "q5": "What should you prepare before an emergency happens?",
+      "q5_a": "Emergency bag and important health records.",
+      "q5_b": "New clothes only.",
+      "q5_c": "Food for a week only.",
+      "q5_d": "Toys and entertainment."
+    },
+    "self_preparedness": {
+      "q1": "I feel emotionally prepared for the changes that pregnancy, childbirth, and becoming a mother may bring to my life.",
+      "q1_sa": "Strongly Agree",
+      "q1_a": "Agree",
+      "q1_d": "Disagree",
+      "q1_sd": "Strongly Disagree",
+      "q2": "I can manage my emotions when I experience fear, worry, or stress during pregnancy.",
+      "q2_sa": "Strongly Agree",
+      "q2_a": "Agree",
+      "q2_d": "Disagree",
+      "q2_sd": "Strongly Disagree"
+    },
+    "support_person": {
+      "q3": "Is your chosen support person willing to accompany you during labor and delivery?",
+      "q3_yes": "Yes",
+      "q3_not_sure": "Not sure",
+      "q3_no": "No",
+      "q7": "Does your support person know the warning signs that may require immediate medical attention?",
+      "q7_yes": "Yes",
+      "q7_not_sure": "Not sure",
+      "q7_no": "No"
+    },
+    "danger_signs": {
+      "q1": "Are you experiencing any vaginal bleeding or spotting?",
+      "q1_a": "Yes, I am experiencing vaginal bleeding or heavy spotting",
+      "q1_b": "I noticed slight spotting once, but I am keeping an eye on it",
+      "q1_c": "No, but I had bleeding earlier in my pregnancy",
+      "q1_d": "No, I am not experiencing any bleeding or spotting",
+      "q7": "Have you noticed sudden swelling in your face or hands?",
+      "q7_a": "Yes, I noticed sudden and noticeable swelling in my face or hands",
+      "q7_b": "I have mild swelling in my feet or ankles at the end of the day",
+      "q7_c": "My rings or shoes feel slightly tight, but my face looks normal",
+      "q7_d": "No, I have not noticed any sudden swelling in my face or hands"
+    }
   }
 }
