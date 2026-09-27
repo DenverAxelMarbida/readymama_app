@@ -130,6 +130,30 @@ void main() {
       expect(result.percentage, closeTo(39.0, 0.001));
       expect(result.statusTier, PreparednessStatus.needsImprovement);
     });
+
+    test('throws an AssertionError when given a null-category question', () {
+      // A Danger Signs question has inverted rank semantics (rank 1 = the
+      // danger sign). Scoring it here would silently inflate the result, so
+      // the guard must fail loudly in debug mode.
+      final dangerSignQuestion = _questions(
+        1,
+        category: null,
+        optionCount: 4,
+      ).single;
+      final scoredQuestion = _questions(
+        1,
+        category: AssessmentCategory.deliveryPlan,
+      ).single;
+
+      expect(
+        () => scoreCategory(
+          AssessmentCategory.deliveryPlan,
+          [scoredQuestion, dangerSignQuestion],
+          const [],
+        ),
+        throwsA(isA<AssertionError>()),
+      );
+    });
   });
 
   group('aggregateScores', () {
@@ -202,6 +226,26 @@ void main() {
 
       expect(result.isDangerDetected, isFalse);
       expect(result.triggeringQuestionIds, isEmpty);
+    });
+
+    test('throws an AssertionError when given a scored (non-null category) '
+        'question', () {
+      // Scored questions carry NORMAL rank semantics (rank 1 = most prepared),
+      // so screening one here would invert the meaning and report a danger
+      // sign for the best possible answer. The guard must fail loudly.
+      final scoredQuestion = _questions(
+        1,
+        category: AssessmentCategory.emergencyPlan,
+        optionCount: 4,
+      ).single;
+
+      expect(
+        () => screenDangerSigns(
+          dangerSignQuestions: [scoredQuestion],
+          responses: const [],
+        ),
+        throwsA(isA<AssertionError>()),
+      );
     });
   });
 }

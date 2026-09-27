@@ -60,6 +60,17 @@ CategoryResult scoreCategory(
   List<Question> questions,
   List<QuestionResponse> responses,
 ) {
+  // Every question must belong to this category. A null-category Danger Signs
+  // question passed in here would be scored with INVERTED rank semantics (rank
+  // 1 means "this is the danger sign", not "most prepared") and would silently
+  // inflate the score. Fail loudly in debug instead.
+  assert(
+    questions.every((q) => q.category == category),
+    'scoreCategory($category) received a question belonging to a '
+    'different category (or a null-category Danger Signs question): '
+    '${questions.firstWhere((q) => q.category != category).id}',
+  );
+
   if (questions.isEmpty) {
     return CategoryResult(
       category: category,

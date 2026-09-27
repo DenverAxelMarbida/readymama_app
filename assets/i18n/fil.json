@@ -151,12 +151,12 @@
     "support_person": {
       "q3": "Handa at nais ba ng iyong napiling taong susuporta na samahan ka habang ikaw ay nanganganak?",
       "q3_yes": "Oo",
-      "q3_not_sure": "Hindi sigurado",
       "q3_no": "Hindi",
+      "q3_not_sure": "Hindi sigurado",
       "q7": "Alam ba ng iyong taong susuporta ang mga senyales o sintomas na nangangailangan ng agarang pagpapatingin o pagpunta sa health facility?",
       "q7_yes": "Oo",
-      "q7_not_sure": "Hindi sigurado",
-      "q7_no": "Hindi"
+      "q7_no": "Hindi",
+      "q7_not_sure": "Hindi sigurado"
     },
     "danger_signs": {
       "q1": "Nakakaranas ka ba ng pagdurugo o spotting sa puwerta?",

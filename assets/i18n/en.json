@@ -151,12 +151,12 @@
     "support_person": {
       "q3": "Is your chosen support person willing to accompany you during labor and delivery?",
       "q3_yes": "Yes",
-      "q3_not_sure": "Not sure",
       "q3_no": "No",
+      "q3_not_sure": "Not sure",
       "q7": "Does your support person know the warning signs that may require immediate medical attention?",
       "q7_yes": "Yes",
-      "q7_not_sure": "Not sure",
-      "q7_no": "No"
+      "q7_no": "No",
+      "q7_not_sure": "Not sure"
     },
     "danger_signs": {
       "q1": "Are you experiencing any vaginal bleeding or spotting?",

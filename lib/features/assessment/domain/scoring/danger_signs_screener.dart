@@ -29,6 +29,16 @@ ScreeningResult screenDangerSigns({
   required List<Question> dangerSignQuestions,
   required List<QuestionResponse> responses,
 }) {
+  // Only null-category Danger Signs questions may be screened. A scored
+  // question carries NORMAL rank semantics (rank 1 = most prepared), so
+  // screening it here would invert the meaning and report a danger sign for
+  // the best answer. Fail loudly in debug instead.
+  assert(
+    dangerSignQuestions.every((q) => q.category == null),
+    'screenDangerSigns received a scored question (non-null category): '
+    '${dangerSignQuestions.firstWhere((q) => q.category != null).id}',
+  );
+
   final triggering = <String>[];
 
   for (final question in dangerSignQuestions) {

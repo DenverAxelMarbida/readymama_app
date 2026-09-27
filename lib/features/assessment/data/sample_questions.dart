@@ -149,12 +149,12 @@ List<Question> get sampleScoredQuestions {
         QuestionOption(
           id: 'sample.emergency_plan.q1_c',
           labelKey: 'sample_questions.emergency_plan.q1_c',
-          rank: 2,
+          rank: 3,
         ),
         QuestionOption(
           id: 'sample.emergency_plan.q1_a',
           labelKey: 'sample_questions.emergency_plan.q1_a',
-          rank: 3,
+          rank: 2,
         ),
         QuestionOption(
           id: 'sample.emergency_plan.q1_d',
@@ -248,7 +248,10 @@ List<Question> get sampleScoredQuestions {
     ),
 
     // ---------------------------------------------------------- supportPerson
-    // Items 1–10 are Yes / Not sure / No (3-tier: 5/3/1 per AGENTS.md §6).
+    // Items 1–10 are Yes / No / Not Sure (3-tier: 5/3/1 per AGENTS.md §6),
+    // presented in that order to match the source questionnaire. Ranks are
+    // attached to each option, not to its position: Yes = 1, Not Sure = 2,
+    // No = 3.
     Question(
       id: 'sample.support_person.q3',
       category: AssessmentCategory.supportPerson,
@@ -260,14 +263,14 @@ List<Question> get sampleScoredQuestions {
           rank: 1,
         ),
         QuestionOption(
-          id: 'sample.support_person.q3_not_sure',
-          labelKey: 'sample_questions.support_person.q3_not_sure',
-          rank: 2,
-        ),
-        QuestionOption(
           id: 'sample.support_person.q3_no',
           labelKey: 'sample_questions.support_person.q3_no',
           rank: 3,
+        ),
+        QuestionOption(
+          id: 'sample.support_person.q3_not_sure',
+          labelKey: 'sample_questions.support_person.q3_not_sure',
+          rank: 2,
         ),
       ],
     ),
@@ -282,14 +285,14 @@ List<Question> get sampleScoredQuestions {
           rank: 1,
         ),
         QuestionOption(
-          id: 'sample.support_person.q7_not_sure',
-          labelKey: 'sample_questions.support_person.q7_not_sure',
-          rank: 2,
-        ),
-        QuestionOption(
           id: 'sample.support_person.q7_no',
           labelKey: 'sample_questions.support_person.q7_no',
           rank: 3,
+        ),
+        QuestionOption(
+          id: 'sample.support_person.q7_not_sure',
+          labelKey: 'sample_questions.support_person.q7_not_sure',
+          rank: 2,
         ),
       ],
     ),
