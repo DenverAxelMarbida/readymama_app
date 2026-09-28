@@ -47,14 +47,15 @@ class DashboardScore {
   });
 }
 
-/// Each category: 10 questions × max 5 = 50 raw points → 0–100% (AGENTS.md
-/// §6). Weights are derived from each question's option count:
+/// Each category: N questions × max 5 = N × 5 raw points → 0–100%
+/// (AGENTS.md §6). How many points a given rank is worth depends on how many
+/// options that particular question has — the source questionnaires mix 2-,
+/// 3- and 4-option questions, and their tier scales differ, so the mapping
+/// lives in the explicit [_pointsByOptionCount] table rather than being
+/// derived arithmetically.
 ///
-/// * 4-tier questions: rank 1 = 5, rank 2 = 3, rank 3 = 2, rank 4 = 1.
-/// * 3-tier questions (Support Person's Yes / Not Sure / No): rank 1 = 5,
-///   rank 2 = 3, rank 3 = 1 — the "2" tier is skipped (AGENTS.md §6).
-///
-/// The floor is always 1, never 0, even for the worst answer.
+/// The floor is always 1, never 0, even for the worst answer: the app
+/// measures degree of readiness, not pass/fail.
 CategoryResult scoreCategory(
   AssessmentCategory category,
   List<Question> questions,
@@ -79,6 +80,13 @@ CategoryResult scoreCategory(
       percentage: 0,
       statusTier: PreparednessStatus.needsImprovement,
     );
+  }
+
+  // Structural validity of every question is checked up front — before any
+  // response is looked at — so a malformed question is caught even if the
+  // user never reached it.
+  for (final question in questions) {
+    _validateQuestionStructure(question);
   }
 
   var rawScore = 0;
@@ -128,20 +136,55 @@ DashboardScore aggregateScores(List<CategoryResult> results) {
   );
 }
 
+/// Points awarded for each rank, indexed by how many options the question
+/// offers. Index 0 of each list is rank 1 (the best answer).
+///
+/// The 4-tier scale (5/3/2/1) is Hospital Bag's own published weighting —
+/// "A = 5 Well Prepared, B = 3 Prepared, C = 2 Slightly Prepared,
+/// D = 1 Not Prepared" — extended to the other categories (AGENTS.md §6).
+/// 3-tier questions (Support Person's Yes / Not sure / No) skip the "2" tier
+/// entirely: 5/3/1. 2-tier questions (Yes / No) are 5/1.
+const Map<int, List<int>> _pointsByOptionCount = {
+  2: <int>[5, 1],
+  3: <int>[5, 3, 1],
+  4: <int>[5, 3, 2, 1],
+};
+
+/// Fails loudly in debug on a structurally invalid question: an unsupported
+/// option count, or ranks that are not exactly 1..N with no gaps and no
+/// duplicates. A duplicated or missing rank would otherwise score silently
+/// wrong, and a question with, say, 5 options has no defined weighting.
+void _validateQuestionStructure(Question question) {
+  final optionCount = question.options.length;
+  assert(
+    optionCount >= 2 && optionCount <= 4,
+    'Question ${question.id} has $optionCount options; the scoring table is '
+    'only defined for 2, 3 and 4 options.',
+  );
+
+  final ranks = question.options.map((o) => o.rank);
+  final distinct = ranks.toSet();
+  assert(
+    distinct.length == optionCount &&
+        distinct.containsAll(List<int>.generate(optionCount, (i) => i + 1)),
+    'Question ${question.id} must carry ranks 1..$optionCount exactly once '
+    'each, with no gaps or duplicates; got ${ranks.toList()}.',
+  );
+}
+
 int _pointsForRank(int rank, int optionCount) {
-  if (optionCount <= 3) {
-    return switch (rank) {
-      1 => 5,
-      2 => 3,
-      _ => 1,
-    };
+  final tiers = _pointsByOptionCount[optionCount];
+  if (tiers == null) {
+    throw ArgumentError.value(
+      optionCount,
+      'optionCount',
+      'No scoring table for this option count; expected 2, 3 or 4',
+    );
   }
-  return switch (rank) {
-    1 => 5,
-    2 => 3,
-    3 => 2,
-    _ => 1,
-  };
+  if (rank < 1 || rank > tiers.length) {
+    throw RangeError.range(rank, 1, tiers.length, 'rank');
+  }
+  return tiers[rank - 1];
 }
 
 /// Status-tier cutoffs (none are implied anywhere else in the repo):
