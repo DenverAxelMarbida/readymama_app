@@ -251,35 +251,85 @@ void main() {
       }
     });
 
-    test('the source key is honoured where the best answer is not option A', () {
-      // Delivery Plan Q2's source answer key is B, and Emergency Plan Q2's is
-      // C — rank 1 must follow the key, never the letter position.
-      final deliveryQ2 = deliveryPlanQuestions[1];
-      expect(
-        deliveryQ2.options
-            .singleWhere((o) => o.id.endsWith('_b'))
-            .rank,
-        1,
-      );
-      final emergencyQ2 = emergencyPlanQuestions[1];
-      expect(
-        emergencyQ2.options
-            .singleWhere((o) => o.id.endsWith('_c'))
-            .rank,
-        1,
-      );
+    test('Support Person rank table matches the stored source ordering', () {
+      // Every scored Support Person question's rank is pinned here so a future
+      // "helpful" re-rank fails the build. The table below is the shipped
+      // rank map (id suffix -> rank) for each question, PLUS the display
+      // order the options ship in (which is the order they appear in the
+      // source, not the rank order — e.g. q4 ships anytime/sometimes/no/sure).
+      const expectedRanks = <String, Map<String, int>>{
+        'q1': {'yes': 1, 'no': 2},
+        'q3': {'yes': 1, 'not_sure': 2, 'no': 3},
+        'q4': {'yes_anytime': 1, 'sometimes': 2, 'not_sure': 3, 'no': 4},
+        'q5': {'yes': 1, 'no': 2},
+        'q6': {'yes': 1, 'not_sure': 2, 'no': 3},
+        'q7': {'yes': 1, 'not_sure': 2, 'no': 3},
+        'q8': {'yes': 1, 'partially': 2, 'no': 3},
+        'q9': {'yes': 1, 'no': 2},
+        'q10': {'yes': 1, 'sometimes': 2, 'no': 3},
+      };
+      const expectedOrder = <String, List<String>>{
+        'q1': ['yes', 'no'],
+        'q3': ['yes', 'no', 'not_sure'],
+        'q4': ['yes_anytime', 'sometimes', 'no', 'not_sure'],
+        'q5': ['yes', 'no'],
+        'q6': ['yes', 'no', 'not_sure'],
+        'q7': ['yes', 'no', 'not_sure'],
+        'q8': ['yes', 'no', 'partially'],
+        'q9': ['yes', 'no'],
+        'q10': ['yes', 'no', 'sometimes'],
+      };
+
+      for (final entry in expectedRanks.entries) {
+        final question =
+            supportPersonQuestions.firstWhere((q) => q.id.endsWith(entry.key));
+        final bySuffix = _ranksBySuffix(question);
+        expect(bySuffix, entry.value, reason: entry.key);
+        expect(
+          question.options.map((o) => o.id.substring(question.id.length + 1)),
+          expectedOrder[entry.key],
+          reason: '${entry.key} display order',
+        );
+      }
     });
 
-    test('Support Person Yes/No/Not sure questions rank 1/2/3 with Not sure '
-        'in the middle', () {
-      const yesNoNotSure = ['q3', 'q6', 'q7'];
-      for (final stem in yesNoNotSure) {
-        final question =
-            supportPersonQuestions.firstWhere((q) => q.id.endsWith(stem));
-        final bySuffix = _ranksBySuffix(question);
-        expect(bySuffix['yes'], 1, reason: question.id);
-        expect(bySuffix['not_sure'], 2, reason: question.id);
-        expect(bySuffix['no'], 3, reason: question.id);
+    test('Emergency Q4 ranks "ignore the pain" last and "take any medicine" '
+        'third', () {
+      // §11 flagged that Emergency Q1/Q6/Q10 all rank "ignore it" dead last
+      // but Q4 ranked "Ignore the pain" at 3. Fixed: ignoring a severe symptom
+      // is now as unsafe as Q1/Q6/Q10's ignore options (4), while
+      // self-medicating is third-worst (3). b=2, c=1 unchanged.
+      final question = emergencyPlanQuestions.firstWhere((q) => q.id.endsWith('q4'));
+      final bySuffix = _ranksBySuffix(question);
+      expect(bySuffix['a'], 4, reason: question.id);
+      expect(bySuffix['b'], 2, reason: question.id);
+      expect(bySuffix['c'], 1, reason: question.id);
+      expect(bySuffix['d'], 3, reason: question.id);
+    });
+
+    test('rank 1 follows the source answer key, not letter position', () {
+      // §4: "Rank 1 is not always option A." Each scored bank's best answer
+      // is pinned to the suffix the source key chooses, so an accidental
+      // re-sort that moved rank 1 to a different letter fails here.
+      const rankOneSuffix = <String, List<String>>{
+        'delivery_plan': ['q1_a', 'q2_b', 'q3_a', 'q4_a', 'q5_b', 'q6_a',
+          'q7_a', 'q8_a', 'q9_a', 'q10_a'],
+        'emergency_plan': ['q1_b', 'q2_c', 'q3_a', 'q4_c', 'q5_a', 'q6_b',
+          'q7_c', 'q8_a', 'q9_b', 'q10_b'],
+      };
+      for (final entry in rankOneSuffix.entries) {
+        final questions = banks[entry.key]!;
+        expect(questions, hasLength(entry.value.length), reason: entry.key);
+        for (var i = 0; i < questions.length; i++) {
+          final expectSuffix = entry.value[i];
+          final actual = questions[i].options
+              .singleWhere((o) => o.rank == 1)
+              .id
+              .split('.')
+              .last;
+          expect(actual, expectSuffix,
+              reason: '${entry.key} question ${i + 1} rank 1');
+        }
       }
     });
   });
@@ -356,24 +406,7 @@ void main() {
 
   group('danger signs screener', () {
     test('selecting the rank-1 option of any question detects danger', () {
-      for (final index in [0, 4, 9]) {
-        final question = dangerSignQuestions[index];
-        final result = screenDangerSigns(
-          dangerSignQuestions: dangerSignQuestions,
-          responses: [
-            for (final q in dangerSignQuestions)
-              QuestionResponse(
-                questionId: q.id,
-                selectedOptionId: q.options
-                    .firstWhere((o) => o.rank == 1)
-                    .id,
-              ),
-          ],
-        );
-        expect(result.isDangerDetected, isTrue);
-        expect(result.triggeringQuestionIds, hasLength(10));
-
-        // and the single-trigger case
+      for (final question in dangerSignQuestions) {
         final single = screenDangerSigns(
           dangerSignQuestions: [question],
           responses: [
@@ -384,7 +417,26 @@ void main() {
           ],
         );
         expect(single.isDangerDetected, isTrue, reason: question.id);
+        expect(single.triggeringQuestionIds, [question.id], reason: question.id);
       }
+    });
+
+    test('all-danger answers report every question as triggering', () {
+      final result = screenDangerSigns(
+        dangerSignQuestions: dangerSignQuestions,
+        responses: [
+          for (final q in dangerSignQuestions)
+            QuestionResponse(
+              questionId: q.id,
+              selectedOptionId: q.options
+                  .firstWhere((o) => o.rank == 1)
+                  .id,
+            ),
+        ],
+      );
+      expect(result.isDangerDetected, isTrue);
+      expect(result.triggeringQuestionIds,
+          dangerSignQuestions.map((q) => q.id).toList());
     });
 
     test('answering B/C/D everywhere reports no immediate danger', () {

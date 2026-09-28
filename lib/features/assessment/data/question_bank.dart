@@ -711,7 +711,7 @@ const List<Question> emergencyPlanQuestions = [
       QuestionOption(
         id: "q.emergency_plan.q4_a",
         labelKey: "questions.emergency_plan.q4_a",
-        rank: 3,
+        rank: 4,
       ),
       QuestionOption(
         id: "q.emergency_plan.q4_b",
@@ -726,7 +726,7 @@ const List<Question> emergencyPlanQuestions = [
       QuestionOption(
         id: "q.emergency_plan.q4_d",
         labelKey: "questions.emergency_plan.q4_d",
-        rank: 4,
+        rank: 3,
       ),
     ],
   ),
@@ -1180,7 +1180,6 @@ const List<Question> selfPreparednessQuestions = [
   ),
 ];
 
-/// SUPPORT PERSON — the scored subset of the source questionnaire.
 /// SUPPORT PERSON — the SCORED half of the source questionnaire only.
 ///
 /// EXCLUDED FROM THE SCORED BANK, and why:
@@ -1401,7 +1400,7 @@ const List<Question> supportPersonQuestions = [
   ),
 ];
 
-/// DANGER SIGNS — 10 scored questions.
+/// DANGER SIGNS — 10 screener questions (never scored).
 ///
 /// Source oddities, copied verbatim and deliberately NOT corrected:
 /// * The page introducing this section also carries a stray author note,

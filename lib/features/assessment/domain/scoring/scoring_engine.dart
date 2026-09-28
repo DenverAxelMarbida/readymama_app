@@ -110,7 +110,7 @@ CategoryResult scoreCategory(
     rawScore: rawScore,
     maxPossible: maxPossible,
     percentage: percentage,
-    statusTier: _statusForpercentage(percentage),
+    statusTier: _statusForPercentage(percentage),
   );
 }
 
@@ -131,7 +131,7 @@ DashboardScore aggregateScores(List<CategoryResult> results) {
   final overallScore = average.round();
   return DashboardScore(
     overallScore: overallScore,
-    statusTier: _statusForpercentage(overallScore.toDouble()),
+    statusTier: _statusForPercentage(overallScore.toDouble()),
     results: results,
   );
 }
@@ -190,7 +190,7 @@ int _pointsForRank(int rank, int optionCount) {
 /// Status-tier cutoffs (none are implied anywhere else in the repo):
 /// ≥80% ready · 60–79% needs_preparation · 40–59% not_yet_ready · <40%
 /// needs_improvement.
-PreparednessStatus _statusForpercentage(double percentage) {
+PreparednessStatus _statusForPercentage(double percentage) {
   if (percentage >= 80) return PreparednessStatus.ready;
   if (percentage >= 60) return PreparednessStatus.needsPreparation;
   if (percentage >= 40) return PreparednessStatus.notYetReady;

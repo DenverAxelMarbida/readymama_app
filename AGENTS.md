@@ -38,19 +38,19 @@ of checking the source — don't repeat that pattern.
 
 ---
 
-## 2. Corrected category structure (IMPORTANT — code does not yet reflect this)
+## 2. Corrected category structure
 
 The codebase's original `AssessmentCategory` enum
-(`lib/core/database/app_database.dart`) has 7 values:
+(`lib/core/database/app_database.dart`) originally had 7 values:
 ```
 deliveryPlan, transportationPlan, emergencyFund, hospitalBag,
 supportPerson, emergencyPlan, dangerSignKnowledge
 ```
 
-This is **wrong**. `transportationPlan` and `emergencyFund` do not exist
+That was **wrong**. `transportationPlan` and `emergencyFund` do not exist
 as categories anywhere in the source material — transportation and money
 questions are just questions #2 and #6 inside the Delivery Plan quiz.
-`selfPreparedness` is missing entirely, despite being the largest single
+`selfPreparedness` was missing entirely, despite being the largest single
 section in ReadyMama_Contents.pdf (14 of 61 pages).
 
 **The correct 6 categories**, in source order, are:
@@ -64,10 +64,12 @@ section in ReadyMama_Contents.pdf (14 of 61 pages).
 6. Support Person (see §5 — this one is split between scored and
    data-entry halves)
 
-So `AssessmentCategory` (the enum backing the *scored* `AssessmentScores`
-table) should end up with **5 values**: `deliveryPlan`, `hospitalBag`,
-`emergencyPlan`, `selfPreparedness`, `supportPerson`. Danger Signs is
-tracked in its own table, not this enum.
+**The code now reflects this.** `AssessmentCategory` (the enum backing the
+*scored* `AssessmentScores` table) ships exactly the 5 scored values —
+`deliveryPlan`, `hospitalBag`, `emergencyPlan`, `selfPreparedness`,
+`supportPerson` — and Danger Signs is tracked in its own table. The related
+tables already exist in `app_database.dart`: `DangerSignsScreenings`,
+`DeliveryPlanRecords`, `SupportPersonRecords`, and `EmergencyPlanRecords`.
 
 ---
 
@@ -118,16 +120,18 @@ into the `AssessmentCategory` enum.
 
 ---
 
-## 5. Support Person is split — first 10 items scored, rest is data entry
+## 5. Support Person is split — 9 scored questions, rest is data entry
 
-Reading the actual Support Person pages (55–61) closely: items 1–10 are
-Yes/No/Not Sure readiness questions (these DO score, and belong to
-Assess → `AssessmentScores`). Items 11 onward are plain data fields — full
+Reading the actual Support Person pages (55–61) closely: **9 questions score** —
+Q1 and Q3–Q10 (yes-ish / not-sure / no readiness items). These belong to
+Assess → `AssessmentScores`. **Q2** ("Who is your primary support person?", a
+7-option relationship field) is excluded because it is a categorical
+relationship field, not a readiness measure — it belongs to My Plan →
+`SupportPersonRecord.relationship`. Items Q11+ are plain data fields — full
 name, relationship, contact number, address, alternate contact — with no
-scoring anywhere. Those belong to My Plan → `SupportPersonRecord`, and
-that same record is what the Emergency Card's "Support Person /
-Significant Other" field displays. She should never have to enter this
-information twice.
+scoring anywhere. Those belong to My Plan → `SupportPersonRecord`, and that
+same record is what the Emergency Card's "Support Person / Significant Other"
+field displays. She should never have to enter this information twice.
 
 ---
 
@@ -150,10 +154,15 @@ degree of readiness, not pass/fail.
   The correct ranking is usually obvious from what each option says (e.g.
   "already have a planned ride" > "will find a ride when labor starts" >
   "haven't thought about it").
-- **Support Person items 1–10** (Yes/No/Not Sure, 3 tiers): Yes=5, Not
-  Sure=3, No=1.
-- Each category: 10 questions × max 5 = 50 raw points → convert to a
-  0–100% per category.
+- **Support Person Q1, Q3–Q10** (9 questions): scored on the option-count
+  table below — 2-option questions (Q1, Q5, Q9) are 5/1, 3-option questions
+  (Q3, Q6, Q7, Q8, Q10) are 5/3/1, and 4-option questions (Q4) are 5/3/2/1.
+- The **real points table** is indexed by option count: 2 options → 5/1;
+  3 options → 5/3/1; 4 options → 5/3/2/1. Every answer earns at least 1
+  (the floor is never 0).
+- Each 10-question category: 10 × max 5 = 50 raw points → convert to a
+  0–100% per category. **Support Person is the exception: 9 scored questions
+  → max 45**, so its percentage is score/45.
 - Overall dashboard score = average of the 5 scoreable categories'
   percentages (Danger Signs excluded, see §4).
 - Each category's % buckets into the 4 existing status tiers already in
@@ -227,12 +236,10 @@ Plan decision above), `EmergencyScreen`, `RemindersScreen`,
 `ProfileScreen`. `DashboardScreen` is also a placeholder pending its real
 Section 3 build.
 
-`pubspec.yaml` does not yet include `video_player`. `en.json`/`fil.json`'s
-`categories` object still has the old 7-category keys
-(`transportation_plan`, `emergency_fund` need removal; `self_preparedness`
-needs adding) — this is a correction, not a deprecation, so removing the
-wrong keys is appropriate even though `.ai/PROJECT_RULES.md` generally
-prefers additive changes.
+`pubspec.yaml` does not yet include `video_player`. The **assessment data
+layer is complete**: the 59-question bilingual bank, the scoring engine, and
+the danger-signs screener are all shipped and tested (see `UPDATED_DETAILS.md`).
+The UI screens that consume them are still placeholders pending Section 3.
 
 ---
 

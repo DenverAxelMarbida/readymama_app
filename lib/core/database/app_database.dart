@@ -43,6 +43,14 @@ class AssessmentScores extends Table {
   TextColumn get category =>
       textEnum<AssessmentCategory>()();
 
+  /// One row per category — the app scores each category exactly once. This
+  /// constrains the table so an upsert can never leave duplicate rows behind,
+  /// and the v2 → v3 migration dedupes legacy databases first (see onUpgrade).
+  @override
+  List<Set<Column>> get uniqueKeys => [
+        {category},
+      ];
+
   /// Raw points earned in this category.
   IntColumn get score => integer()();
 
@@ -200,10 +208,14 @@ class EmergencyPlanRecords extends Table {
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
+  /// Test-only constructor that runs against an in-memory / injected
+  /// [QueryExecutor] instead of the on-device SQLite file.
+  AppDatabase.forTesting(super.executor);
+
   // Bump this and add a MigrationStrategy step whenever you alter a table
   // after the app has shipped to real users.
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -222,6 +234,19 @@ class AppDatabase extends _$AppDatabase {
               "('deliveryPlan', 'hospitalBag', 'emergencyPlan', "
               "'selfPreparedness', 'supportPerson')",
             );
+          }
+          if (from < 3) {
+            // v2 -> v3: AssessmentScores gains a UNIQUE constraint on
+            // `category`, so a category can only ever hold one row. Older
+            // databases may have accumulated duplicate rows (one per
+            // upsert), which would now violate the constraint; keep the
+            // newest row (MAX id) per category before rebuilding the table
+            // with the new unique key.
+            await customStatement(
+              "DELETE FROM assessment_scores WHERE id NOT IN "
+              "(SELECT MAX(id) FROM assessment_scores GROUP BY category)",
+            );
+            await m.alterTable(TableMigration(assessmentScores));
           }
         },
       );
@@ -242,8 +267,19 @@ class AppDatabase extends _$AppDatabase {
         .getSingleOrNull();
   }
 
+  /// Upserts one row per [AssessmentCategory] (`category` is UNIQUE). A
+  /// conflict (category already scored) becomes an UPDATE instead of a new
+  /// row, and [AssessmentScores.updatedAt] is refreshed so "last touched"
+  /// stays truthful for an in-place overwrite.
   Future<int> upsertScore(AssessmentScoresCompanion entry) {
-    return into(assessmentScores).insertOnConflictUpdate(entry);
+    final now = Value(DateTime.now());
+    return into(assessmentScores).insert(
+      entry.copyWith(updatedAt: now),
+      onConflict: DoUpdate(
+        (old) => entry.copyWith(updatedAt: now),
+        target: [assessmentScores.category],
+      ),
+    );
   }
 
   /// Sum of `score` across all categories, out of the categories' combined

@@ -123,51 +123,66 @@ def norm(s):
 
 
 # --------------------------------------------------------------------------
-# PDF text -> {question number: [EN options, FIL options, ...]}
+# PDF text -> {question number:
+#                [{'prompt': str, 'options': [(letter, text), ...]}, ...]}
 # --------------------------------------------------------------------------
 def parse_questions(text, letterless=False):
     out, cur, last, prev = {}, None, None, None
     in_trailer = False
+    prompt_pending = False
     for raw in text.splitlines():
         line = SPLIT_BLANK.sub('', raw.rstrip()).rstrip()
         if not line.strip() or JUNK.match(line):
             continue
         if STOP_AT.search(line):
-            in_trailer, last = True, None
+            in_trailer, last, prompt_pending = True, None, False
             continue
 
         m = Q_RE.match(line)
         # "1.A" / "10.B" in a scoring-key block is not a question.
         if m and len(m.group(2).split()) == 1 and len(m.group(2)) <= 2:
-            last = None
+            last, prompt_pending = None, False
             continue
         if m and not (not letterless and OPT_RE.match(line)):
             n = int(m.group(1))
             if n != prev:
                 # A repeated question number means a new language run: start a
                 # fresh occurrence so EN and FIL never merge into one list.
-                out.setdefault(n, []).append([])
+                out.setdefault(n, []).append({'prompt': m.group(2),
+                                              'options': []})
                 last = None
             cur, prev, in_trailer = n, n, False
+            prompt_pending = True
             continue
         if cur is None or in_trailer:
             continue
 
+        # Options come first: a line that is a valid option ends the prompt.
         if not letterless:
             m = OPT_RE.match(line)
             if m:
-                out[cur][-1].append((m.group(1).lower(), m.group(2).strip()))
-                last = out[cur][-1][-1]
+                out[cur][-1]['options'].append(
+                    (m.group(1).lower(), m.group(2).strip()))
+                last = out[cur][-1]['options'][-1]
+                prompt_pending = False
                 continue
         else:
             if line[0].isspace():
-                out[cur][-1].append(('?', line.strip()))
-                last = out[cur][-1][-1]
+                out[cur][-1]['options'].append(('?', line.strip()))
+                last = out[cur][-1]['options'][-1]
+                prompt_pending = False
                 continue
+
+        # Continuation lines of the prompt are not options: they are indented
+        # the same way letterless option lines are, so anything that is not a
+        # recognised option and precedes the first option belongs to the prompt.
+        if prompt_pending:
+            out[cur][-1]['prompt'] += ' ' + line.strip()
+            continue
 
         if last is not None:                    # wrapped continuation line
             last = (last[0], (last[1] + ' ' + line.strip()).strip())
-            out[cur][-1][-1] = last
+            out[cur][-1]['options'][-1] = last
     return {n: occ for n, occ in out.items() if any(occ)}
 
 
@@ -285,14 +300,19 @@ def check_fidelity(symbols, en, fil, pdf_path):
 
         def locale_runs(num, locale):
             idx = 0 if locale == 'en' else 1
+            # Only occurrences that actually carry options are real Q&A blocks;
+            # numbered education bullets share the same numbers and must not
+            # be mistaken for a language run.
+            is_real = lambda occ: occ.get('options')
             if parsed_all is not None:
-                runs = [o for o in parsed_all.get(num, []) if o]
+                runs = [o for o in parsed_all.get(num, []) if is_real(o)]
                 if idx < len(runs):
                     return [runs[idx]]
                 return []
-            return [o for o in parsed_two[idx].get(num, []) if o]
+            return [o for o in parsed_two[idx].get(num, []) if is_real(o)]
 
         for q in questions:
+            stem = q['promptKey'].split('.', 2)[2]
             for locale in ('en', 'fil'):
                 data = en if locale == 'en' else fil
                 runs = locale_runs(q['num'], locale)
@@ -304,6 +324,22 @@ def check_fidelity(symbols, en, fil, pdf_path):
                 if bucket is None:
                     fail('%s: %s.json has no entry for %s' % (cat, locale, q['id']))
                     continue
+
+                # Prompt text must match the PDF run's prompt verbatim.
+                pdf_prompt = runs[0]['prompt']
+                if not pdf_prompt:
+                    fail('%s %s %s: no prompt text found in the PDF'
+                         % (cat, q['id'], locale))
+                else:
+                    checked[0] += 1
+                    prompt = bucket.get(stem)
+                    if prompt is None:
+                        fail('%s: %s.json is missing %s' % (cat, locale,
+                                                            q['promptKey']))
+                    elif norm(pdf_prompt) != norm(prompt):
+                        fail('%s %s %s: prompt = %r but the PDF says %r'
+                             % (cat, q['id'], locale, prompt, pdf_prompt))
+
                 for o in q['options']:
                     # JSON nests as questions.<category>.<stem>[_<suffix>], and
                     # `bucket` is already the per-category dict.
@@ -314,35 +350,23 @@ def check_fidelity(symbols, en, fil, pdf_path):
                         continue
                     checked[0] += 1
                     if not letterless and o['suffix'] in 'abcd':
-                        hit = next((t for l, t in runs[0] if l == o['suffix']), None)
+                        hit = next((t for l, t in runs[0]['options']
+                                    if l == o['suffix']), None)
                         if hit is None:
                             fail('%s %s %s: source has no option %r'
                                  % (cat, q['id'], locale, o['suffix'].upper()))
                             continue
                     else:
-                        hit = next((t for _l, t in runs[0] if norm(t) == norm(value)),
-                                   None)
+                        hit = next((t for _l, t in runs[0]['options']
+                                    if norm(t) == norm(value)), None)
                         if hit is None:
                             fail('%s %s %s: %r is not among the source options %r'
                                  % (cat, q['id'], locale, value,
-                                    [t for _l, t in runs[0]]))
+                                    [t for _l, t in runs[0]['options']]))
                             continue
                     if not norm(hit).startswith(norm(value)):
                         fail('%s %s %s: %s = %r but the PDF says %r'
                              % (cat, q['id'], locale, key, value, hit))
-
-            prompts = [o for o in parsed_all.get(q['num'], []) if o] \
-                if parsed_all is not None else \
-                [o for o in parsed_two[0].get(q['num'], []) if o]
-            stem = q['promptKey'].split('.', 2)[2]
-            prompt = (en.get('questions', {}).get(cat) or {}).get(stem)
-            if prompt is None:
-                fail('%s: en.json is missing %s' % (cat, q['promptKey']))
-            else:
-                checked[0] += 1
-                if not prompts:
-                    fail('%s %s: no English run to check the prompt against'
-                         % (cat, q['id']))
 
 
 def main():

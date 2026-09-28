@@ -195,7 +195,7 @@ void main() {
     }
 
     test('a 2-option (Yes/No) question scores 100% / 20%', () {
-      // Support Person Q1 and Q5 are the only 2-option scored questions.
+      // Support Person Q1, Q5 and Q9 are the only 2-option scored questions.
       final questions = _questions(
         5,
         category: AssessmentCategory.supportPerson,

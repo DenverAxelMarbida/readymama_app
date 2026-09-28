@@ -12,12 +12,11 @@
 
   "categories": {
     "delivery_plan": "Delivery Plan",
-    "transportation_plan": "Transportation Plan",
-    "emergency_fund": "Emergency Fund",
     "hospital_bag": "Hospital Bag & Essential Supplies",
     "support_person": "Support Person Plan",
     "emergency_plan": "Emergency Plan",
-    "danger_sign_knowledge": "Pregnancy Danger Signs Knowledge"
+    "danger_sign_knowledge": "Pregnancy Danger Signs Knowledge",
+    "self_preparedness": "Self-Preparedness"
   },
 
   "status": {
@@ -44,8 +43,6 @@
     "results_title": "Your Results",
     "feedback": {
       "delivery_plan_not_ready": "You have not yet identified your delivery facility. Discuss this with your healthcare provider soon.",
-      "transportation_needs_preparation": "You have identified a way to travel to the health facility, but a backup transportation plan has not yet been identified.",
-      "emergency_fund_needs_preparation": "Consider discussing and planning accessible funds for transportation and unexpected maternity-related expenses.",
       "emergency_plan_not_ready": "You still need to complete important emergency preparations, such as identifying emergency contacts and backup transportation."
     }
   },
